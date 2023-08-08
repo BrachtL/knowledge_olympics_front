@@ -1,0 +1,188 @@
+/* General layout styles for the entire app */
+.app-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Header styles */
+.header {
+  padding: 0px 0px 0px 4px;
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Styles for the strong element */
+.header strong {
+  font-size: 18px;
+}
+
+/* Styles for the div element */
+.header div {
+  display: flex;
+  align-items: center;
+}
+
+/* Styles for the image element */
+.header img {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-left: 7px;
+}
+
+/* Input styles */
+.input {
+  width: 100%;
+  padding: 24px;
+
+  background: #E6E6E6;
+  border-radius: 30px;
+  border: none;
+
+  font-size: 16px;
+}
+
+/* Button styles */
+.button {
+  width: 100%;
+  padding: 24px;
+  font-weight: 700;
+
+  background: #18c9dc;
+  color: #FFFFFF;
+
+  border-radius: 30px;
+  margin-top: 12px;
+  border: none;
+
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  font-size: 16px;
+}
+
+.button:hover {
+  filter: brightness(0.9);
+}
+
+/* Question container styles */
+.question-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  width: 100%; /* Adjust the width as needed */
+}
+
+/* Question title styles */
+.question-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Question text styles */
+.question-text {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Option label styles */
+.option-label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* Option input styles */
+.option-input {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* Option text styles */
+.option-text {
+  font-weight: bold;
+}
+
+/* Selected option styles */
+.option-input:checked + .option-text {
+  font-weight: bold;
+}
+
+/* Add these styles for the "Calculate Score" button */
+.calculate-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; /* Add more margin to the top */
+  margin-bottom: 60px; /* Add margin to the bottom */
+}
+
+.calculate-button button {
+  padding: 16px 40px;
+  font-weight: 700;
+  background: #e74c3c; /* Change the background color to a red shade */
+  color: #ffffff;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s;
+  font-size: 16px;
+}
+
+.calculate-button button:hover {
+  filter: brightness(0.9);
+}
+
+/* Header styles */
+.header {
+  padding: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+
+
+.entities-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.entity {
+  font-size: 12px;
+  margin: 4px;
+}
+
+
+
+.header-title {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.header-subtitle {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.header-description {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+
+
+
+
+
+
+

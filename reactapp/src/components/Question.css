@@ -1,0 +1,17 @@
+.question-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px; /* Adjust margin to create space between questions */
+  width: calc(100% - 40px); /* Take the full width of the container */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.question-container h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.question-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}

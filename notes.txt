@@ -1,0 +1,34 @@
+
+
+/*
+considerações:
+
+	urls
+		root/aluno 		(login do aluno)
+		root/professor 	(login do professor)
+		root/prova 		(aluno resolve a prova, se não estiver logado redir)
+		root/criar 		(professor cria questões, se não estiver logado redir)
+		root/ 			(pergunta se é aluno ou prof e redireciona)
+		root/controle 	(login para mim)
+		
+	
+	
+		
+		
+
+	como prevenir 2 alunos logarem com o mesmo nome? (fraude)
+		- não é possível ter senhas, e ainda que tivesse
+		
+		solução: detectar de onde vem os dados
+		se o usuário estiver logado e os dados virem com a flag "prova" -> ok
+		se o usuário estiver logado e os dados virem da tela de login -> negar
+		se der problema com o login do usuário e ele tiver que logar de novo
+			-> eu derrubo ele da minha plataforma de controle (usando ID)
+		
+	criar um ambiente de controle para mim
+		função: deslogar usuário, para ele poder relogar
+		
+	
+
+
+*/

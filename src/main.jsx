@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Login from './pages/login_teacher/login.jsx'
+import Login from './pages/questions_creation/questionCreation.jsx'
 //import { Questions } from './pages/questions' //3 considerações:
 //1 - o arquivo padrão é o index.jsx, então não precisa informar './home/index.jsx'
 //2 - estou importando a função Home() (não sei porque a letra maiúscula) do arquvio index.jsx

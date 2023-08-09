@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Question from '../../components/Question';
 import questionsMock from '../../questionsMock'; // Make sure to adjust the import path
 
-export function Home() {
+export function Questions() {
   const [selectedOptions, setSelectedOptions] = useState(new Array(questionsMock.length).fill(''));
   const [score, setScore] = useState(0);
 

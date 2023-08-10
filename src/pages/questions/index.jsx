@@ -2,10 +2,12 @@ import './styles.css';
 import React, { useState } from 'react';
 import Question from '../../components/Question';
 import questionsMock from '../../questionsMock'; // Make sure to adjust the import path
+import { useResponse } from '../../contexts/responseContext'
 
 export function Questions() {
   const [selectedOptions, setSelectedOptions] = useState(new Array(questionsMock.length).fill(''));
   const [score, setScore] = useState(0);
+  const { response } = useResponse();
 
   const handleOptionChange = (index, option) => {
     const updatedOptions = [...selectedOptions];
@@ -27,7 +29,7 @@ export function Questions() {
   return (
     <div className="questions-container">
       <header className="questions-header">
-        <h1 className="questions-header-title">1ª Olímpiada do Conhecimento</h1>
+        <h1 className="questions-header-title">Bem vindo(a), {response.student_name}!<br /><br />1ª Olímpiada do Conhecimento</h1>
         <h2 className="questions-header-subtitle">Prefeitura Municipal de São João do Oeste</h2>
         <p className="questions-header-description">
           Secretaria de Educação - Secretaria de Cultura<br/><br/>Sistema de Luciano Bracht

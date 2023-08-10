@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import "./login_student.css"
+import { submitStudentData } from '../../components/api';
+import { useNavigate } from 'react-router-dom';
+import { useResponse } from '../../contexts/responseContext'
 
 const StudentLogin = () => {
   const [name, setName] = useState('');
@@ -9,13 +12,36 @@ const StudentLogin = () => {
   const [school, setSchool] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+  const { updateResponse } = useResponse();
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       // Perform validation and login logic here
-      // Redirect user to dashboard or another page
+
+      // Simulate submitting student data
+      const data = { name, birthdate, number, classroom, school };
+      const response = await submitStudentData(data);
+
+      // Handle the response from the server
+      if (response.success) {
+        updateResponse(response); // Update the response in the context
+        // Store JWT in localStorage (replace 'token' with your actual JWT key)
+        
+        //localStorage.setItem('token', response.token);
+        navigate('/questions');
+
+        // Redirect user to dashboard or another page if successful
+        // For example, you can use React Router for navigation
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+
+      // Redirect user to dashboard or another page if successful
     } catch (err) {
+      console.log(err);
       setError('Something went wrong. Please try again.');
     }
   };

@@ -3,6 +3,28 @@
 /*
 considerações:
 
+	next steps:
+	- db: create
+	- backend: student login 
+		receive form data, send jwt and student's name
+		jwt should store student or teacher, id, name
+	- frontend: make a request with token to verify if user is logged
+	when trying to access /question and /teacher-question
+	- backend: verify if the token is valid when trying to access
+	/question and /teacher-question
+
+	what is the difference between save localStorage, sessionStorage...?
+	any of those are cookies?
+	choose one method to save (will I be saving anything but jwt?)
+	
+	
+	show the student's name on the top, to prevent and detect if someone uses
+	the other student's name
+	
+	
+	jwt has to expire 15 minutes after the exam's duration
+	
+
 	urls
 		root/aluno 		(login do aluno)
 		root/professor 	(login do professor)
@@ -27,6 +49,13 @@ considerações:
 		
 	criar um ambiente de controle para mim
 		função: deslogar usuário, para ele poder relogar
+		
+	
+	change the questions container's horizontal margin
+	(/question and /teacher-question)
+
+
+	check if all questions have answers when trying to finish the exam
 		
 	
 

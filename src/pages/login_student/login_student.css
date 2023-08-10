@@ -1,6 +1,6 @@
-body {
+.login-student-body {
   font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  background-color: rgb(201, 102, 102);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,7 +8,7 @@ body {
   margin: 0;
 }
 
-.login-form {
+.login-student-form {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -18,16 +18,16 @@ body {
   margin: -100px auto 0;
 }
 
-.login-form h2 {
+.login-student-form h2 {
   color: #333333;
   margin-bottom: 32px;
 }
 
-.login-input {
+.login-student-input {
   margin-bottom: 16px;
 }
 
-.login-input input {
+.login-student-input input {
   width: 100%;
   padding: 12px;
   border: 1px solid #dddddd;
@@ -35,7 +35,7 @@ body {
   font-size: 14px;
 }
 
-.login-button {
+.login-student-button {
   background-color: #007bff;
   color: #ffffff;
   border: none;
@@ -48,7 +48,7 @@ body {
   margin-top: 32px;
 }
 
-.login-button:hover {
+.login-student-button:hover {
   background-color: #0056b3;
 }
 

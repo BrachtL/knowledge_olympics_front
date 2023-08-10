@@ -12,6 +12,11 @@
 }
 
 .question-container p {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 20px;
+}
+
+.option-label {
+  display: flex;
+  font-size: 20px;
 }

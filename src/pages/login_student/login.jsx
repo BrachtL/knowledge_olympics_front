@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import "./styles.css"
+import "./login_student.css"
 
-const Login = () => {
+const StudentLogin = () => {
   const [name, setName] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [number, setNumber] = useState('');
@@ -21,56 +21,58 @@ const Login = () => {
   };
 
   return (
-    <div className="login-form">
-      <h2>Olimpíada do Conhecimento <br /><br />Aluno</h2>
-      <form onSubmit={handleLogin}>
-        <div className="login-input">
-          <input
-            type="text"
-            placeholder="Nome"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="login-input">
-          <input
-            type="date"
-            placeholder="Data de Nascimento"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-            max={new Date().toISOString().split("T")[0]} // Set max attribute to today's date
-          />
-        </div>
-        <div className="login-input">
-          <input
-            type="number"
-            placeholder="Número"
-            value={number}
-            onChange={(e) => setNumber(parseInt(e.target.value))}
-            step="1"
-          />
-        </div>
-        <div className="login-input">
-          <input
-            type="text"
-            placeholder="Turma"
-            value={classroom}
-            onChange={(e) => setClassroom(e.target.value)}
-          />
-        </div>
-        <div className="login-input">
-          <input
-            type="text"
-            placeholder="Escola"
-            value={school}
-            onChange={(e) => setSchool(e.target.value)}
-          />
-        </div>
-        <button className="login-button" type="submit">Começar</button>
-        {error && <p className="error-message">{error}</p>}
-      </form>
+    <div className="login-student-body">
+      <div className="login-student-form">
+        <h2>Olimpíada do Conhecimento <br /><br />Aluno</h2>
+        <form onSubmit={handleLogin}>
+          <div className="login-student-input">
+            <input
+              type="text"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="date"
+              placeholder="Data de Nascimento"
+              value={birthdate}
+              onChange={(e) => setBirthdate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]} // Set max attribute to today's date
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="number"
+              placeholder="Número"
+              value={number}
+              onChange={(e) => setNumber(parseInt(e.target.value))}
+              step="1"
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="text"
+              placeholder="Turma"
+              value={classroom}
+              onChange={(e) => setClassroom(e.target.value)}
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="text"
+              placeholder="Escola"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+            />
+          </div>
+          <button className="login-student-button" type="submit">Começar</button>
+          {error && <p className="error-message">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };
 
-export default Login;
+export default StudentLogin;

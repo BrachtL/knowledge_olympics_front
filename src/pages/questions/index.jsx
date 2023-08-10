@@ -25,17 +25,17 @@ export function Questions() {
   };
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1 className="header-title">1ª Olímpiada do Conhecimento</h1>
-        <h2 className="header-subtitle">Prefeitura Municipal de São João do Oeste</h2>
-        <p className="header-description">
+    <div className="questions-container">
+      <header className="questions-header">
+        <h1 className="questions-header-title">1ª Olímpiada do Conhecimento</h1>
+        <h2 className="questions-header-subtitle">Prefeitura Municipal de São João do Oeste</h2>
+        <p className="questions-header-description">
           Secretaria de Educação - Secretaria de Cultura<br/><br/>Sistema de Luciano Bracht
         </p>
-        <p className="header-description">
+        <p className="questions-header-description">
           Apoio:
         </p>
-        <div className="entities-list">
+        <div className="questions-entities-list">
           {Array.from({ length: 8 }, (_, index) => (
             <div key={index} className="entity">
               Entidade {String.fromCharCode(65 + index)}
@@ -56,7 +56,7 @@ export function Questions() {
       </div>
 
       {questionsMock.length > 0 && (
-        <div className="calculate-button">
+        <div className="questions-calculate-button">
           <button type="button" onClick={calculateScore}>
             Entregar
           </button>

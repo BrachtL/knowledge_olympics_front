@@ -7,7 +7,7 @@ considerações:
 	
 	- add password and confirmation password fields to sutedent's login page
 	
-	- remove subject field from teacher's login page?
+	- check expiration time for teacher's tokens
 	
 	- backend: student login 
 		receive form data, send jwt and student's name
@@ -16,11 +16,6 @@ considerações:
 	when trying to access /question and /teacher-question
 	- backend: verify if the token is valid when trying to access
 	/question and /teacher-question
-
-	what is the difference between save localStorage, sessionStorage...?
-	any of those are cookies?
-	choose one method to save (will I be saving anything but jwt?)
-	
 	
 	show the student's name on the top, to prevent and detect if someone uses
 	the other student's name
@@ -112,3 +107,16 @@ CREATE TABLE student_answers(
 	FOREIGN KEY (id_students) REFERENCES students(id),
 	FOREIGN KEY (id_questions) REFERENCES questions(id)
 );
+
+
+ALTER TABLE questions
+ADD media_type VARCHAR(20) NOT NULL,
+ADD media_name VARCHAR(500),
+ADD media_url VARCHAR(500),
+ADD media_source VARCHAR(500);
+
+ALTER TABLE questions
+MODIFY question VARCHAR(2000) NOT NULL;
+
+
+UPDATE questions SET media_type = 'no';

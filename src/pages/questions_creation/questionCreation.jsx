@@ -48,16 +48,22 @@ const TeacherQuestionCreation = () => {
     setQuestions(updatedQuestions);
   };
 
-  const handleMediaTypeChange = (index, mediaType) => {
+  const handleMediaTypeChange = (index, media_type) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index].mediaType = mediaType;
+    updatedQuestions[index].media_type = media_type;
     setQuestions(updatedQuestions);
   };
 
   const handleMediaFileNameChange = (index, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index].mediaFileName = value;
+    updatedQuestions[index].media_name = value;
     setQuestions(updatedQuestions);
+  };
+
+  const handleMediaSourceChange = (index, value) => {
+    const newQuestions = [...questions];
+    newQuestions[index].media_source = value;
+    setQuestions(newQuestions);
   };
 
   const [questionHeights, setQuestionHeights] = useState([]);
@@ -103,37 +109,37 @@ const TeacherQuestionCreation = () => {
                   <input
                     type="radio"
                     value="audio"
-                    checked={question.mediaType === 'audio'}
+                    checked={question.media_type === 'audio'}
                     onChange={() => handleMediaTypeChange(index, 'audio')}
                     className="media-type-radio"
                   />
-                  Audio &nbsp; &nbsp; 
-                </label>
+                  Audio
+                </label> &nbsp; &nbsp;
                 <label>
                   <input
                     type="radio"
                     value="text"
-                    checked={question.mediaType === 'text'}
+                    checked={question.media_type === 'text'}
                     onChange={() => handleMediaTypeChange(index, 'text')}
                     className="media-type-radio"
                   />
-                  Text &nbsp; &nbsp; 
-                </label>
+                  Text
+                </label> &nbsp; &nbsp;
                 <label>
                   <input
                     type="radio"
                     value="image"
-                    checked={question.mediaType === 'image'}
+                    checked={question.media_type === 'image'}
                     onChange={() => handleMediaTypeChange(index, 'image')}
                     className="media-type-radio"
                   />
-                  Image &nbsp; &nbsp; 
-                </label>
+                  Image
+                </label> &nbsp; &nbsp;
                 <label>
                   <input
                     type="radio"
                     value="no"
-                    checked={question.mediaType === 'no'}
+                    checked={question.media_type === 'no'}
                     onChange={() => handleMediaTypeChange(index, 'no')}
                     className="media-type-radio"
                   />
@@ -145,11 +151,20 @@ const TeacherQuestionCreation = () => {
               <input
                 type="text"
                 className="media-file-input"
-                value={question.mediaFileName}
+                value={question.media_name}
                 onChange={(event) => handleMediaFileNameChange(index, event.target.value)}
                 placeholder="Enter media file name"
               />
             </div>
+            <div className="media-source">
+            <input
+              type="text"
+              className="media-source-input"
+              value={question.media_source}
+              onChange={(event) => handleMediaSourceChange(index, event.target.value)}
+              placeholder="Enter media file source"
+            />
+          </div>
             <div className="question-textarea">
             <label className="alternative-label">Question: </label>
               <textarea

@@ -4,7 +4,11 @@
 considerações:
 
 	next steps:
-	- db: create
+	
+	- add password and confirmation password fields to sutedent's login page
+	
+	- remove subject field from teacher's login page?
+	
 	- backend: student login 
 		receive form data, send jwt and student's name
 		jwt should store student or teacher, id, name
@@ -61,3 +65,50 @@ considerações:
 
 
 */
+
+
+/*
+DB
+
+check if db types of data are appropriate
+
+*/
+
+CREATE TABLE students(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(50) NOT NULL,
+	birthdate DATE NOT NULL,
+	number INT NOT NULL,
+	classroom VARCHAR(20) NOT NULL,
+	school VARCHAR(50) NOT NULL,
+	score INT	
+);
+
+CREATE TABLE teachers(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	subject VARCHAR(20) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	password CHAR(60) NOT NULL
+);
+
+CREATE TABLE questions(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	subject VARCHAR(20) NOT NULL,
+	id_teacher INT NOT NULL,
+	question VARCHAR(1000) NOT NULL,
+	correct_answer VARCHAR(500) NOT NULL,
+	wrong_answer_1 VARCHAR(500) NOT NULL,
+	wrong_answer_2 VARCHAR(500) NOT NULL,
+	wrong_answer_3 VARCHAR(500) NOT NULL,
+	wrong_answer_4 VARCHAR(500) NOT NULL,
+	FOREIGN KEY (id_teacher) REFERENCES teachers(id)
+);
+
+CREATE TABLE student_answers(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	id_students INT NOT NULL,
+	id_questions INT NOT NULL,
+	answer CHAR(1) NOT NULL,
+	FOREIGN KEY (id_students) REFERENCES students(id),
+	FOREIGN KEY (id_questions) REFERENCES questions(id)
+);

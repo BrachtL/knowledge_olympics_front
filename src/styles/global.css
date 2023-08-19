@@ -3,6 +3,6 @@
   padding: 50;
   box-sizing: border-box;
 
-  font-size: 30px;
+  font-size: inherit;
   font-family: 'Roboto Condensed', sans-serif;
 }

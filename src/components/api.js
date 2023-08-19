@@ -1,3 +1,53 @@
+const BASE_URL = 'https://knowledge-olympics-back.glitch.me'; //todo: change this url
+
+export async function login(name, password, type) {
+  const url = `${BASE_URL}/login`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, password, type }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.token; // todo: define this data (necessary data to load the next page)
+    } else {
+      throw new Error('Authentication failed');
+    }
+  } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+export async function getTeacherQuestionsData(token) {
+  const url = `${BASE_URL}/questions`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data// todo: define this data (necessary data to load the next page)
+    } else {
+      throw new Error('Authentication failed');
+    }
+  } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+
+
 export const submitStudentData = async (data) => {
   // Mock function to simulate submitting student data
   // In a real application, replace this with an actual API call

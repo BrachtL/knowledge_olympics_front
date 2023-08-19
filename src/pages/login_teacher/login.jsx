@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import "./login_teacher.css"
+import { login, getTeacherQuestionsData } from '../../components/api';
+import { useNavigate } from 'react-router-dom';
+import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
 
 const TeacherLogin = () => {
   const [subject, setSubject] = useState('');
@@ -7,14 +10,42 @@ const TeacherLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      // Perform validation and login logic here
-      // Redirect user to dashboard or another page
+      setError('');
+      //login validation
+      if(!(name.length >= 3 && password.length >= 3)) {
+        setError('Name and password must have at least 3 characters.');
+        return;
+      }
+
+
+      // validate data in backend (user exists, is it all right to go to next page?)
+      const token = await login(name, password, "teacher");
+      console.log(token); //todo: remove it
+      //todo: I have to save it someway and add to further request's headers
+
+      setCookie('jwt_token', token, 7); // Store the token for 7 days
+
+
+      navigate('/teacher-questions');
+
+      // Redirect user to dashboard or another page if successful
+      // For example, you can use React Router for navigation
+
+
+
+
+      // Redirect teacher user to questions creation page
+
+
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setError(err.message);
+      //setError('Something went wrong. Please try again.');
     }
   };
 
@@ -23,14 +54,6 @@ const TeacherLogin = () => {
       <div className="login-teacher-form">
         <h2>Olimpíada do Conhecimento <br /><br />Professor</h2>
         <form onSubmit={handleLogin}>
-          <div className="login-teacher-input">
-            <input
-              type="text"
-              placeholder="Disciplina"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-          </div>
           <div className="login-teacher-input">
             <input
               type="text"

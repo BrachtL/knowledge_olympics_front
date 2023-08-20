@@ -2,38 +2,51 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./styles.css";
 import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
-import { getTeacherQuestionsData } from '../../components/api';
+import { getTeacherQuestionsData, postTeacherQuestionsData } from '../../components/api';
+import Modal from '../../components/modal';
 
 const TeacherQuestionCreation = () => {
   //console.log("token from cookie: ", getCookie("jwt_token"));
   const [teacherName, setTeacherName] = useState('Teacher Name');
   const [subject, setSubject] = useState('Subject');
   const [questions, setQuestions] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     // Fetch data from backend API here and set the state accordingly
-    // For example:
     getTeacherQuestionsData(getCookie("jwt_token"))
       .then(data => {
         console.log("NAME HERE: ", data.teacherName);
-        //todo: correct data structure in backend and in here
         setTeacherName(data.teacherName);
         setSubject(data.subject);
-        setQuestions(data.questionsArray); //todo: make it an array to load all questions
-        // it will also solve my current map bug below
+        setQuestions(data.questionsArray);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []); // The empty array ensures the effect runs only on mount
 
-  const handleSave = () => {
-    // Implement the logic to save the questions
-    // For example, you can send a request to your backend API
-    // and provide the questions data to be saved
-    // Once saved, you can provide user feedback or redirect them
+  async function handleSave() {
+    // Once saved, provide user feedback
     console.log("Questions saved:", questions);
     console.log("Json sent: ", JSON.stringify(modifiedContent));
+
+    try {
+      const data = await postTeacherQuestionsData(getCookie("jwt_token"), questions);
+
+      if (data.message == "success") {
+        // Positive feedback to the user on successful save
+        setModalMessage("Questions saved successfully!");
+      } else {
+        // Negative feedback to the user with the error message
+        setModalMessage(`Error saving questions: ${data.message}`);
+      }
+    } catch (error) {
+      setModalMessage(`Error saving questions: ${error.message}`);
+    }
+
+    setModalOpen(true);
   };
 
   const handleQuestionChange = (index, field, value) => {
@@ -93,6 +106,10 @@ const TeacherQuestionCreation = () => {
     }
     newAlternativeHeights[index][field] = height;
     setAlternativeHeights(newAlternativeHeights);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -201,34 +218,13 @@ const TeacherQuestionCreation = () => {
       <button className="save-button" onClick={handleSave}>
         SALVAR
       </button>
+
+      <Modal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 };
 
 export default TeacherQuestionCreation;
-
-// Example function to fetch questions data from backend API
-async function fetchQuestionsDataFromBackend() {
-  try {
-    const response = await fetch('/api/getQuestionsData', {
-      method: 'GET',
-      headers: {
-        //'Authorization': `Bearer ${getCookie("jwt_token")}`,
-        'token': getCookie("jwt_token"),
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch questions data');
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
 
 
 

@@ -37,7 +37,31 @@ export async function getTeacherQuestionsData(token) {
 
     if (response.ok) {
       const data = await response.json();
-      return data// todo: define this data (necessary data to load the next page)
+      return data
+    } else {
+      throw new Error('Authentication failed');
+    }
+  } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+export async function postTeacherQuestionsData(token, questions) {
+  const url = `${BASE_URL}/questions`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify(questions)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data// todo: define this data (necessary data to show if it was successful)
     } else {
       throw new Error('Authentication failed');
     }

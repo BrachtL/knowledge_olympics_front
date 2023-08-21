@@ -120,3 +120,6 @@ MODIFY question VARCHAR(2000) NOT NULL;
 
 
 UPDATE questions SET media_type = 'no';
+
+
+INSERT INTO teachers () values ();

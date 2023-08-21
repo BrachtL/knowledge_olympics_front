@@ -37,7 +37,7 @@ const TeacherQuestionCreation = () => {
 
       if (data.message == "success") {
         // Positive feedback to the user on successful save
-        setModalMessage("Questions saved successfully!");
+        setModalMessage("Conteúdo salvo com sucesso!");
       } else {
         // Negative feedback to the user with the error message
         setModalMessage(`Error saving questions: ${data.message}`);
@@ -112,15 +112,26 @@ const TeacherQuestionCreation = () => {
     setModalOpen(false);
   };
 
+  const handleLogout = () => {
+    //todo: send the cookie to API to save in blacklist 
+    deleteCookie("jwt_token");
+    window.location.href = '/teacher';
+  };
+
   return (
     <div className="teacher-question-container">
-      <h2 className="header">{teacherName} - {subject}</h2>
+      <div className="header-container">
+        <h2 className="header">{teacherName} - {subject}</h2>
+        <button className="logout-button-top" onClick={handleLogout}>
+          SAIR
+        </button>
+      </div>
       <div className="question-list">
         {questions.map((question, index) => (
           <div key={index} className="question">
-            <div className="question-number">Question {question.number}</div>
+            <div className="question-number">Questão {question.number}</div>
             <div className="media-type-group">
-              <label className="media-type-label">Is this question related to any media file?</label>
+              <label className="media-type-label">Esta questão está relacionada a algum arquivo de mídia?</label>
               <div>
                 <label>
                   <input
@@ -130,7 +141,7 @@ const TeacherQuestionCreation = () => {
                     onChange={() => handleMediaTypeChange(index, 'audio')}
                     className="media-type-radio"
                   />
-                  Audio
+                  Áudio
                 </label> &nbsp; &nbsp;
                 <label>
                   <input
@@ -140,7 +151,7 @@ const TeacherQuestionCreation = () => {
                     onChange={() => handleMediaTypeChange(index, 'text')}
                     className="media-type-radio"
                   />
-                  Text
+                  Texto
                 </label> &nbsp; &nbsp;
                 <label>
                   <input
@@ -150,7 +161,7 @@ const TeacherQuestionCreation = () => {
                     onChange={() => handleMediaTypeChange(index, 'image')}
                     className="media-type-radio"
                   />
-                  Image
+                  Imagem
                 </label> &nbsp; &nbsp;
                 <label>
                   <input
@@ -160,7 +171,7 @@ const TeacherQuestionCreation = () => {
                     onChange={() => handleMediaTypeChange(index, 'no')}
                     className="media-type-radio"
                   />
-                  No
+                  Não
                 </label>
               </div>
             </div>
@@ -170,25 +181,25 @@ const TeacherQuestionCreation = () => {
                 className="media-file-input"
                 value={question.media_name}
                 onChange={(event) => handleMediaFileNameChange(index, event.target.value)}
-                placeholder="Enter media file name"
+                placeholder="Nome da mídia"
               />
             </div>
             <div className="media-source">
-            <input
-              type="text"
-              className="media-source-input"
-              value={question.media_source}
-              onChange={(event) => handleMediaSourceChange(index, event.target.value)}
-              placeholder="Enter media file source"
-            />
-          </div>
+              <input
+                type="text"
+                className="media-source-input"
+                value={question.media_source}
+                onChange={(event) => handleMediaSourceChange(index, event.target.value)}
+                placeholder="Fonte (url, livro...)"
+              />
+            </div>
             <div className="question-textarea">
-            <label className="alternative-label">Question: </label>
+              <label className="alternative-label">Questão: </label>
               <textarea
                 className="question-textarea-input"
                 value={question.question}
                 onChange={(event) => handleTextareaChange(index, 'question', event.target.value)}
-                placeholder="Enter the question"
+                placeholder="Pergunta"
                 rows="1"
                 style={{ height: `${Math.max(30, questionHeights[index] || 30)}px` }}
                 onInput={(e) => handleQuestionTextareaResize(index, e.target.scrollHeight)}
@@ -198,13 +209,13 @@ const TeacherQuestionCreation = () => {
               {['correct_answer', 'wrong_answer_1', 'wrong_answer_2', 'wrong_answer_3', 'wrong_answer_4'].map((field, subIndex) => (
                 <div className="alternative" key={subIndex}>
                   <label className="alternative-label">
-                    {subIndex === 0 ? 'Correct Alternative:' : `Wrong Alternative ${subIndex}:`}
+                    {subIndex === 0 ? 'Alternativa Correta:' : `Alternativa Errada ${subIndex}:`}
                   </label>
                   <textarea
                     className="alternative-textarea-input"
                     value={question[field]}
                     onChange={(event) => handleTextareaChange(index, field, event.target.value)}
-                    placeholder={`Enter ${subIndex === 0 ? 'correct' : 'wrong'} alternative`}
+                    placeholder={`Alternativa ${subIndex === 0 ? 'correta' : 'errada'}`}
                     rows="1"
                     style={{ height: `${Math.max(30, alternativeHeights[index]?.[field] || 30)}px` }}
                     onInput={(e) => handleAlternativeTextareaResize(index, field, e.target.scrollHeight)}
@@ -215,9 +226,14 @@ const TeacherQuestionCreation = () => {
           </div>
         ))}
       </div>
+      <div className="button-container">
+      <button className="logout-button-bot" onClick={handleLogout}>
+        SAIR
+      </button>
       <button className="save-button" onClick={handleSave}>
         SALVAR
       </button>
+    </div>
 
       <Modal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>

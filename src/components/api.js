@@ -34,14 +34,22 @@ export async function getTeacherQuestionsData(token) {
         'token': token
       }
     });
-
+    
     if (response.ok) {
       const data = await response.json();
       return data
     } else {
-      throw new Error('Authentication failed');
-    }
+      const errorData = await response.json();
+      if (response.status === 401) {
+        // Token expired, redirect to login page
+        window.location.href = '/teacher';
+      } else {
+        console.log(errorData);
+        throw new Error('Authentication failed');
+      }
+    } 
   } catch (error) {
+    console.log(error);
     throw new Error('Something went wrong. Please try again.');
   }
 }

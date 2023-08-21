@@ -6,10 +6,35 @@
   border-radius: 8px;
 }
 
+.header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  margin-bottom: 60px;
+}
+
+.logout-button-top {
+  padding: 5px 10px;
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.logout-button-top:hover {
+  /* Hover effect for the logout buttons */
+  background-color: #c9302c;
+}
+
 .header {
   font-size: 34px;
   color: #333333;
-  margin-bottom: 60px;
 }
 
 .question-list {
@@ -47,8 +72,16 @@
   color: #0b7e31;
 }
 
+.button-container {
+  /* Styles for the container of the second logout button and save button */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+  padding: 10px 0;
+}
+
 .save-button {
-  background-color: #ff0000; /* Red color */
+  background-color: #00bb00; /* Green color */
   color: #ffffff; /* White text color */
   border: none;
   border-radius: 4px;
@@ -56,13 +89,30 @@
   font-size: 26px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  display: block; /* Change display to block to center horizontally */
-  margin: 20px auto 0; /* Center the button horizontally and add top margin */
+  margin: 0 10px; /* Add margin on both sides */
   margin-bottom: 40px;
 }
 
+.logout-button-bot {
+  background-color: #cc0000; /* Red color */
+  color: #ffffff; /* White text color */
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px; /* Adjust padding for a larger button */
+  font-size: 26px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 10px; /* Add margin on both sides */
+  margin-bottom: 40px;
+}
+
+
 .save-button:hover {
-  background-color: #cc0000; /* Darker red color on hover */
+  background-color: #00dd00; /* Darker red color on hover */
+}
+
+.logout-button-bot:hover, .logout-button-top:hover {
+  background-color: #ee0000
 }
 
 .media-type-group {

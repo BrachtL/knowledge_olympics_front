@@ -25,7 +25,12 @@ const TeacherLogin = () => {
 
 
       // validate data in backend (user exists, is it all right to go to next page?)
-      const token = await login(name, password, "teacher");
+      const data = {
+        name: name,
+        password: password,
+        type: "teacher"
+      }
+      const token = await login(data);
       console.log(token); //todo: remove it
       //todo: I have to save it someway and add to further request's headers
 

@@ -4,14 +4,14 @@ import './Question.css';
 function Question({ question, selectedOption, onOptionChange }) {
   return (
     <div className="question-container">
-      <h2>Question {question.id}</h2>
-      <p>{question.text}</p>
+      <h2>Question {question.number}</h2>
+      <p>{question.questionText}</p>
       <form>
         {question.options.map((option) => (
-          <label key={option} className="option-label">
+          <label key={`${question.number}_${option}`} className="option-label">
             <input
               type="radio"
-              name={`question_${question.id}`}
+              name={`question_${question.number}`} //.id here
               value={option}
               checked={selectedOption === option}
               onChange={() => onOptionChange(option)}

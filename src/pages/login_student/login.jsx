@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import "./login_student.css"
-import { submitStudentData } from '../../components/api';
+import { login } from '../../components/api';
 import { useNavigate } from 'react-router-dom';
 import { useResponse } from '../../contexts/responseContext'
+import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
 
 const StudentLogin = () => {
   const [name, setName] = useState('');
   const [birthdate, setBirthdate] = useState('');
-  const [number, setNumber] = useState('');
+  const [numberId, setNumberId] = useState('');
   const [classroom, setClassroom] = useState('');
   const [school, setSchool] = useState('');
   const [error, setError] = useState('');
@@ -22,22 +23,22 @@ const StudentLogin = () => {
       // Perform validation and login logic here
 
       // Simulate submitting student data
-      const data = { name, birthdate, number, classroom, school };
-      const response = await submitStudentData(data);
+      const data = { name, birthdate, numberId, classroom, school, type : "student" };
+      const token = await login(data);
 
       // Handle the response from the server
-      if (response.success) {
-        updateResponse(response); // Update the response in the context
-        // Store JWT in localStorage (replace 'token' with your actual JWT key)
-        
-        //localStorage.setItem('token', response.token);
+      //if (response.success) {
+
+        setCookie('jwt_token', token, 7); // Store the token for 7 days
+
+
         navigate('/questions');
 
         // Redirect user to dashboard or another page if successful
         // For example, you can use React Router for navigation
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+      //} else {
+      //  setError('Something went wrong. Please try again.');
+      //}
 
       // Redirect user to dashboard or another page if successful
     } catch (err) {
@@ -45,6 +46,9 @@ const StudentLogin = () => {
       setError('Something went wrong. Please try again.');
     }
   };
+
+ 
+
 
   return (
     <div className="login-student-body">
@@ -72,8 +76,8 @@ const StudentLogin = () => {
             <input
               type="number"
               placeholder="Número"
-              value={number}
-              onChange={(e) => setNumber(parseInt(e.target.value))}
+              value={numberId}
+              onChange={(e) => setNumberId(parseInt(e.target.value))}
               step="1"
             />
           </div>
@@ -97,6 +101,7 @@ const StudentLogin = () => {
           {error && <p className="error-message">{error}</p>}
         </form>
       </div>
+      {/*<div dangerouslySetInnerHTML={{ __html: testText }} />*/}
     </div>
   );
 };

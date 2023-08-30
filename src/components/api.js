@@ -1,6 +1,6 @@
 const BASE_URL = 'https://knowledge-olympics-back.glitch.me'; //todo: change this url
 
-export async function login(name, password, type) {
+export async function login(userData) {
   const url = `${BASE_URL}/login`;
 
   try {
@@ -9,8 +9,12 @@ export async function login(name, password, type) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, password, type }),
+      body: JSON.stringify(userData), 
+      //teacher: name, password, type
+      //student: name, birthdate, numberId, classroom, school, type
     });
+
+    
 
     if (response.ok) {
       const data = await response.json();
@@ -19,6 +23,37 @@ export async function login(name, password, type) {
       throw new Error('Authentication failed');
     }
   } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+export async function getExamData(token) {
+  const url = `${BASE_URL}/exam`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      if (response.status === 401) {
+        // Token expired, redirect to login page
+        window.location.href = '/';
+      } else {
+        console.log(errorData);
+        throw new Error('Authentication failed');
+      }
+    } 
+  } catch (error) {
+    console.log(error);
     throw new Error('Something went wrong. Please try again.');
   }
 }

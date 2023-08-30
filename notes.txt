@@ -7,8 +7,6 @@ considerações:
 	
 	- add password and confirmation password fields to sutedent's login page
 	
-	- check expiration time for teacher's tokens
-	
 	- backend: student login 
 		receive form data, send jwt and student's name
 		jwt should store student or teacher, id, name
@@ -21,7 +19,7 @@ considerações:
 	the other student's name
 	
 	
-	jwt has to expire 15 minutes after the exam's duration
+	jwt has to expire 05 minutes after the exam's duration
 	
 
 	urls
@@ -39,6 +37,8 @@ considerações:
 
 	como prevenir 2 alunos logarem com o mesmo nome? (fraude)
 		- não é possível ter senhas, e ainda que tivesse
+		
+		solução: mostrar na tela o nome, turma e numero da chamada do user
 		
 		solução: detectar de onde vem os dados
 		se o usuário estiver logado e os dados virem com a flag "prova" -> ok
@@ -121,5 +121,111 @@ MODIFY question VARCHAR(2000) NOT NULL;
 
 UPDATE questions SET media_type = 'no';
 
+fabianemadre@*
+INSERT INTO teachers (subject, name, password) values ('German', 'Fabiane', '$2a$10$e4aRnvUr3aKdQY3DRtUsjuE6ALcSkvR8TaZeFhQKaKOEKAThiE3rm');
+INSERT INTO teachers (subject, name, password) values ('German', 'Gerlinde', '$2a$10$G7MHh/qcPfizsl06pveW6e924/9udUTT0KNcvZzf6WdDrLAShmanm');
+gerlindemadre$&
 
-INSERT INTO teachers () values ();
+INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, wrong_answer_4) values ("German", 2, '', '', '', '', '', '');
+
+INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, wrong_answer_4) values ("German", 3, '', '', '', '', '', '');
+
+
+ ALTER TABLE students ADD creation_datetime DATETIME NOT NULL;
+ 
+ ALTER TABLE questions ADD media_text VARCHAR(5000);
+ 
+ 
+ /*
+ 
+ Loading exam page steps
+ 
+	front next commit message:
+	
+>>>>>>>>>>  delete text var from the login.jsx file  <<<<<<<<<<
+
+	FEATURE: login, load questions (without media manipulation)
+
+ 
+	first version: without media manipulation
+	(I will send, but not use it in front yet)
+	
+	second version: with media manipulation
+	
+	Back algorithm:
+DONE: - make the query getExamPageData
+	
+		- create questionsArray
+			- shuffle alternatives (options) here
+		- create orderedQuestionsArray and mediasArray
+		- must to check if media_name != null or '' (or type != no ??)
+		- extract the different medias from the questions in an ARRAY
+		- I must to add "no" type in the mediasArray
+		- create separeted arrays : audio, others
+		- shuffle audio and others
+		- if id is even, audio will be the first in this ARRAY
+		- if id is odd, audio would be the last in this ARRAY
+		- loop inside a loop to check if each question matches or not each media
+			- create a temp array with the questions that match this media in loop
+			//- shuffle this array at the end of the loop
+			- join it into the orderedQuestionsArray
+			
+		//- make a new loop just to enumerate the questions
+		//I think I dont need to enumerate the questions... I use the index+1
+		
+		
+		- bug in the loop inside a loop to order the questions properly
+		
+			
+	commit backend
+	
+	than make the first version in front, commit
+	than next version in front, commit
+	
+	- audios are not organized as intented to
+	- send id property from backend on each question of questions array
+	(- send it back again when send the exam from the frontend)
+	commit back again if any changes
+
+		
+*/
+ 
+
+
+/*
+
+maybe another solution is to send the current cookie and try to match
+to the content id is being modified (teachers only). It prevents to have a lot
+of modifications and lose everything when trying to save
+
+Solve this multiple login problem!
+
+bug -> when an user logs in another tab, the cookie is update to this new one.
+if the previous user (assuming a teacher) updates questions,
+the modal says it was good, but it was not.
+Actually, it could lead to a bigger problem, which is one teacher overwright
+data of another teacher.
+
+I have to:
+	- check if the question id matches (belogs to) teacher id,
+	if it is not, ask username and password again, if it maches, update
+	if it does not match, delete cookie and redirect
+	
+	or: ask again username and password and see if it matches current cookie
+	(best one) --> or: ask again username and password and see if the question ids matches
+	
+	
+	for the student: check if the name in frontend matches with the name
+	related to the cookie id, if it does not match, we have a problem (fraud)
+	
+	say to the supervisor that the student should remain in the same PC
+	all the exam. If it has to change, I have to know what student is.
+
+*/
+
+/*
+
+bug -> why the requests are being made twice?
+I load a page once and the server receives 2 requests
+
+*/

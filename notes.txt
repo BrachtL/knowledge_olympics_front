@@ -62,11 +62,12 @@ considerações:
 */
 
 
-/*
-DB
+/* 
+DONE {
+	DB
 
-check if db types of data are appropriate
-
+	check if db types of data are appropriate
+}
 */
 
 CREATE TABLE students(
@@ -144,49 +145,53 @@ INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answ
 	
 >>>>>>>>>>  delete text var from the login.jsx file  <<<<<<<<<<
 
-	FEATURE: login, load questions (without media manipulation)
+	FEATURE: media manipulation in exam page
 
- 
-	first version: without media manipulation
+
+	DONE: first version: without media manipulation
 	(I will send, but not use it in front yet)
 	
-	second version: with media manipulation
+	DONE: second version: with media manipulation
 	
-	Back algorithm:
-DONE: - make the query getExamPageData
+		- audio
+		- text
 	
-		- create questionsArray
-			- shuffle alternatives (options) here
-		- create orderedQuestionsArray and mediasArray
-		- must to check if media_name != null or '' (or type != no ??)
-		- extract the different medias from the questions in an ARRAY
-		- I must to add "no" type in the mediasArray
-		- create separeted arrays : audio, others
-		- shuffle audio and others
-		- if id is even, audio will be the first in this ARRAY
-		- if id is odd, audio would be the last in this ARRAY
-		- loop inside a loop to check if each question matches or not each media
-			- create a temp array with the questions that match this media in loop
-			//- shuffle this array at the end of the loop
-			- join it into the orderedQuestionsArray
+	
+	DONE {
+		Back algorithm:
+		
+			- create questionsArray
+				- shuffle alternatives (options) here
+			- create orderedQuestionsArray and mediasArray
+			- must to check if media_name != null or '' (or type != no ??)
+			- extract the different medias from the questions in an ARRAY
+			- I must to add "no" type in the mediasArray
+			- create separeted arrays : audio, others
+			- shuffle audio and others
+			- if id is even, audio will be the first in this ARRAY
+			- if id is odd, audio would be the last in this ARRAY
+			- loop inside a loop to check if each question matches or not each media
+				- create a temp array with the questions that match this media in loop
+				//- shuffle this array at the end of the loop
+				- join it into the orderedQuestionsArray
 			
-		//- make a new loop just to enumerate the questions
-		//I think I dont need to enumerate the questions... I use the index+1
-		
-		
-		- bug in the loop inside a loop to order the questions properly
-		
-			
-	commit backend
+			- bug in the loop inside a loop to order the questions properly
+				
+		commit backend
 	
-	than make the first version in front, commit
-	than next version in front, commit
+		than make the first version in front, commit
+	}
 	
-	- audios are not organized as intented to
+	DONE: than next version in front, commit
+	
+	I think it is DONE: - audios are not organized as intented to
+	
+	
+	deal with image (if needed)
+	
 	- send id property from backend on each question of questions array
 	(- send it back again when send the exam from the frontend)
 	commit back again if any changes
-
 		
 */
  
@@ -229,3 +234,27 @@ bug -> why the requests are being made twice?
 I load a page once and the server receives 2 requests
 
 */
+
+
+UPDATE questions
+SET media_text = '<p>Es gibt sehr viele verschiedene Berufe.</p><p>Ein <b>Lehrer</b> unterrichtet Schüler und bringt ihnen verschiedene Dinge bei. In einer Volksschule lehren Lehrer den Kindern das Lesen und Schreiben. Lehrer arbeiten auch mit älteren Kindern und Jugendlichen. Dort unterrichten sie meistens ein bestimmtes Fach, Mathematik oder Sprachen zum Beispiel.</p>
+
+<p>Ein anderer Beruf, bei dem man auf der Universität studieren muss: <b>Arzt</b>. Ein Arzt behandelt kranke Leute in einer Praxis oder im Krankenhaus. Er untersucht die Menschen und stellt fest, was ihnen fehlt. Er verschreibt Medikamente oder andere Behandlungen. Es gibt viele verschiedene Ärzte, manche sind Chirurgen, andere sind Ohrenärzte oder Zahnärzte.</p>
+
+<p>Handwerker lernen ihren Beruf in einer Berufsausbildung. Ein Handwerker ist zum Beispiel ein <b>Bäcker</b>. Er stellt Brot her. Dazu muss er wissen, wie man Mehl, Salz, Hefe und andere Zutaten mischt. Bäcker können sehr viele verschiedene Sorten Brot machen, auch süßes Gebäck.</p>
+
+<p>Ein <b>Bauer</b> arbeitet auch mit Lebensmitteln. Auf seinem Hof hält er Tiere wie Kühe, Hühner oder Schweine. Auf den Feldern pflanzt er Getreidesorten oder Gemüse und Obst. Das liefert er an Supermärkte oder verkauft es selbst auf einem Markt.</p>
+
+<p>Ein <b>Koch</b> arbeitet auch mit Lebensmitteln. In einem Restaurant bereitet er die Speisen zu. Seine Ausbildung macht er entweder in einer Schule oder in einer Lehre.</p>
+
+<p>Ein <b>Verkäufer</b> arbeitet in einem Laden. Dort verkauft er an die Kunden, was der Laden bietet: Das können Lebensmittel sein, aber auch Kleidung oder Autos. </p>'
+WHERE media_name = 'Berufe';
+
+
+
+
+
+
+  
+  
+ 

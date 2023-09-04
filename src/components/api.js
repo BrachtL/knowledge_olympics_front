@@ -113,6 +113,30 @@ export async function postTeacherQuestionsData(token, questions) {
   }
 }
 
+export async function postExam(token, examOptions) {
+  const url = `${BASE_URL}/exam`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify(examOptions)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data// todo: define this data (necessary data to show if it was successful)
+    } else {
+      throw new Error('Authentication failed');
+    }
+  } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
 
 
 export const submitStudentData = async (data) => {

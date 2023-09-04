@@ -15,7 +15,7 @@ considerações:
 	- backend: verify if the token is valid when trying to access
 	/question and /teacher-question
 	
-	show the student's name on the top, to prevent and detect if someone uses
+	DONE: show the student's name on the top, to prevent and detect if someone uses
 	the other student's name
 	
 	
@@ -32,32 +32,25 @@ considerações:
 		
 	
 	
-		
-		
 
 	como prevenir 2 alunos logarem com o mesmo nome? (fraude)
 		- não é possível ter senhas, e ainda que tivesse
 		
-		solução: mostrar na tela o nome, turma e numero da chamada do user
+		DONE: solução: mostrar na tela o nome, turma e numero da chamada do user
 		
 		solução: detectar de onde vem os dados
-		se o usuário estiver logado e os dados virem com a flag "prova" -> ok
-		se o usuário estiver logado e os dados virem da tela de login -> negar
-		se der problema com o login do usuário e ele tiver que logar de novo
+		
+		- criar uma flag para o usuário que logou,
+		então ninguem mais pode logar nesse nome
+		- se der problema com o login do usuário e ele tiver que logar de novo
 			-> eu derrubo ele da minha plataforma de controle (usando ID)
 		
 	criar um ambiente de controle para mim
 		função: deslogar usuário, para ele poder relogar
-		
-	
-	change the questions container's horizontal margin
-	(/question and /teacher-question)
 
 
 	check if all questions have answers when trying to finish the exam
-		
 	
-
 
 */
 
@@ -122,10 +115,8 @@ MODIFY question VARCHAR(2000) NOT NULL;
 
 UPDATE questions SET media_type = 'no';
 
-fabianemadre@*
 INSERT INTO teachers (subject, name, password) values ('German', 'Fabiane', '$2a$10$e4aRnvUr3aKdQY3DRtUsjuE6ALcSkvR8TaZeFhQKaKOEKAThiE3rm');
 INSERT INTO teachers (subject, name, password) values ('German', 'Gerlinde', '$2a$10$G7MHh/qcPfizsl06pveW6e924/9udUTT0KNcvZzf6WdDrLAShmanm');
-gerlindemadre$&
 
 INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, wrong_answer_4) values ("German", 2, '', '', '', '', '', '');
 
@@ -186,14 +177,17 @@ INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answ
 	
 	I think it is DONE: - audios are not organized as intented to
 	
+	*/
 	
+/*
 	deal with image (if needed)
 	
 	- send id property from backend on each question of questions array
 	(- send it back again when send the exam from the frontend)
 	commit back again if any changes
-		
 */
+		
+
  
 
 
@@ -252,9 +246,809 @@ WHERE media_name = 'Berufe';
 
 
 
+ALTER TABLE student_answers
+MODIFY answer VARCHAR(500);
+
+ALTER TABLE students
+ADD are_options_created BOOLEAN DEFAULT FALSE;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+backup queries:
+
+const pool = require('./dbConfig');
+
+async function getExamPageStudentData(studentId) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT name, number, classroom, school
+      FROM students
+      WHERE id = '${studentId}'`);
+    connection.release();
+    console.log(`getExamPageStudentData(${studentId}) return:`, results[0]);
+    return results[0];
+  } catch (err) {
+    console.log('Error querying database: getExamPageStudentData', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+
+async function getExamPageQuestionsData(studentId) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT
+      id, question, correct_answer, wrong_answer_1, wrong_answer_2, 
+      wrong_answer_3, wrong_answer_4, media_type, media_name,
+      media_url, media_source, media_text
+      FROM questions
+      WHERE id_teacher = '${2}' OR id_teacher = ${3}`); //todo: remove this ehre cluase from here?
+    connection.release();
+    console.log(`getExamPageQuestionsData(${studentId}) return:`, results[0]);
+    return results;
+  } catch (err) {
+    console.log('Error querying database: getExamPageQuestionsData', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function getTeacherQuestionsPageData(teacherId) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT
+      teachers.name, teachers.subject,
+      questions.id, questions.question, questions.correct_answer, questions.wrong_answer_1,
+      questions.wrong_answer_2, questions.wrong_answer_3, questions.wrong_answer_4,
+      questions.media_type, questions.media_name, questions.media_url, questions.media_source
+      FROM teachers
+      JOIN questions ON teachers.id = questions.id_teacher
+      WHERE questions.id_teacher = '${teacherId}'`);
+    connection.release();
+    console.log('getCredentials() return:', results[0]);
+    return results;
+  } catch (err) {
+    console.log('Error querying database: getCredentials', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+//todo: when teacher change media info, url will be wrong
+//maybe the best is to send these media info to a "moderator"/"manager"
+//and this person send media info to the questions table.
+//Until I implement this, it will be as it is now.
+async function updateQuestions(teacherId, questionsArray) {
+  try {
+    const connection = await pool.getConnection();
+    for(let k = 0; k < questionsArray.length; k++) {
+      const [results, fields] = await connection.query(`
+        UPDATE questions SET 
+        correct_answer = ?, media_name = ?,
+        media_source = ?, media_type = ?,
+        question = ?, wrong_answer_1 = ?, 
+        wrong_answer_2 = ?, wrong_answer_3 = ?, 
+        wrong_answer_4 = ? 
+        WHERE id_teacher = ? AND id = ?`,
+        [
+          questionsArray[k].correct_answer, questionsArray[k].media_name,
+          questionsArray[k].media_source, questionsArray[k].media_type,
+          questionsArray[k].question, questionsArray[k].wrong_answer_1,
+          questionsArray[k].wrong_answer_2, questionsArray[k].wrong_answer_3 ,
+          questionsArray[k].wrong_answer_4,
+          teacherId, questionsArray[k].id
+        ]);
+      console.log(`updateQuestions with teacherId = ${teacherId} and questionsArray[${k}] = ${JSON.stringify(questionsArray[k])} return: ${JSON.stringify(results)}`);
+    }
+    
+    connection.release();
+    return "success";
+  } catch (err) {
+    console.log('Error querying database: updateQuestions', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function getTeacherUserData(name) {
+  //console.log("checkpoint 2");
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT
+      id, password
+      FROM teachers
+      WHERE name = '${name}'`);
+    connection.release();
+    console.log(`getTeacherUserData(${name}) return:`, results[0]);
+    return results[0];
+  } catch (err) {
+    console.log(`Error querying database: getTeacherUserData(${name})`, err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function getStudentData(name) {
+  //console.log("checkpoint 2");
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT
+      id, name, number, classroom, school
+      FROM students
+      WHERE LOWER(name) = LOWER('${name}')`);
+    connection.release();
+    console.log(`getStudentData(${name}) return:`, results[0]);
+    return results[0];
+  } catch (err) {
+    console.log(`Error querying database: getStudentData(${name})`, err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function setStudentData(name, birthdate, numberId, classroom, school) {
+  try {
+    const connection = await pool.getConnection();
+
+    const [results, fields] = await connection.query(`
+      INSERT INTO students (name, birthdate, number, classroom, school, creation_datetime) 
+      VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [name, birthdate, numberId, classroom, school]);    
+    connection.release();
+
+    console.log(`
+      INSERT INTO students (name, birthdate, number, classroom, school, creation_datetime) 
+      VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [name, birthdate, numberId, classroom, school]); 
+    console.log('setStudentData() return:', results);
+    return results.insertId;
+  } catch (err) {
+    console.log('Error querying database: setStudentData', err);
+    console.log("A MENSAGEM É:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+
+
+
+async function insertUser(
+  email, hashedPassword, name, age, category, description, locationId,
+  imageUrl
+  ) {
+  try {
+    const connection = await pool.getConnection();
+    //const [results, fields] = await connection.query(`
+    //  INSERT INTO users (id_location, email, name, age, password, description, image_url, category) 
+    //  VALUES ('${locationId}', '${email}', '${name}', '${age}', '${hashedPassword}', '${description}', '${imageUrl}', '${category}')`);
+    //console.log(`INSERT INTO users (id_location, email, name, age, password, description, image_url, category) 
+    //VALUES ('${locationId}', '${email}', '${name}', '${age}', '${hashedPassword}', '${description}', '${imageUrl}', '${category}')`);
+   
+    //todo: insert current_timestamp (or "Now()") in creation_datetime
+    const [results, fields] = await connection.query(`
+      INSERT INTO users (id_location, email, name, age, password, description, image_url, category, creation_datetime) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [locationId, email, name, age, hashedPassword, description, imageUrl, category]);    
+    connection.release();
+
+    console.log(`
+      INSERT INTO users (id_location, email, name, age, password, description, image_url, category, creation_datetime) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [locationId, email, name, age, hashedPassword, description, imageUrl, category]);
+    console.log('insertUser() return:', results);
+    return results.insertId;
+  } catch (err) {
+    console.log('Error querying database: insertUser', err);
+    console.log("A MENSAGEM É:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function insertLocation(latitude, longitude, uf, city) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      INSERT INTO locations (latitude, longitude, uf, city) VALUES (?, ?, ?, ?)`,
+      [latitude, longitude, uf, city]);
+    console.log('insertLocation() return:', results);
+    connection.release();
+    return results.insertId;
+    
+  } catch (err) {
+    console.log('Error querying database: insertLocation', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function getLocationId(city, uf) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT id FROM locations WHERE city = '${city}' AND uf = '${uf}'`);
+    console.log('getLocationId() return:', results);
+    connection.release();
+    if (results.length > 0) {
+      console.log(results[0].id);
+      return results[0].id;
+    } else {
+      return 0;
+    }
+    
+  } catch (err) {
+    console.log('Error querying database: getLocationId', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+//this query is only used to give the user a token. All the rest (getUser(id)) is done with the token
+async function getUserData(email) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT
+      users.id, users.email, users.password,
+      locations.latitude, locations.longitude
+      FROM users
+      JOIN locations ON users.id_location = locations.id
+      WHERE email = '${email}'`);
+    connection.release();
+    console.log('getCredentials() return:', results[0]);
+    return results[0];
+  } catch (err) {
+    console.log('Error querying database: getCredentials', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+async function getUser(id) {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.query(`
+      SELECT id, id_location, email, name, age, password, description, image_url, category
+      FROM users WHERE id = '${id}'`);
+    connection.release();
+    console.log('getUser() return:', results[0]);
+    return results[0];
+  } catch (err) {
+    console.log('Error querying database: getUser', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+
+async function getPetsExceptMineLikedDisliked(userId) {
+  try {
+    const connection = await pool.getConnection();
+/*
+    const [results, fields] = await connection.query(`
+      SELECT pets.id, pets.id_user, pets.id_location, pets.main_image_URL, pets.name, pets.birthday,
+      pets.species, pets.breed, pets.gender, pets.description, pets.creation_datetime,
+      locations.country, locations.uf, locations.city, locations.latitude, locations.longitude
+      FROM pets
+      JOIN locations ON pets.id_location = locations.id
+      WHERE pets.id_user != ?`, [userId]);
+*/
+
+    const [results, fields] = await connection.query(`SELECT pets.id, pets.id_user, pets.id_location, pets.main_image_URL, pets.name, pets.birthday,
+      pets.species, pets.breed, pets.gender, pets.description, pets.creation_datetime,
+      locations.country, locations.uf, locations.city, locations.latitude, locations.longitude
+      FROM pets
+      JOIN locations ON pets.id_location = locations.id
+      WHERE pets.id_user != ? 
+      AND pets.id NOT IN (
+        SELECT id_pet_liked
+        FROM user_liked_interactions
+        WHERE id_user = ?
+      )
+      AND pets.id NOT IN (
+        SELECT id_pet_disliked
+        FROM user_disliked_interactions
+        WHERE id_user = ?
+      );`, [userId, userId, userId]);
+
+
+    connection.release();
+    console.log(`getPetsExceptMineLikedDisliked(${userId}) return: ${JSON.stringify(results)}`);
+    return results;
+  } catch (err) {
+    console.log('Error querying database: getPetsExceptMineLikedDisliked', err);
+    console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+    throw new Error(err.sqlMessage);
+  }
+}
+
+  async function setLikeRelation(userId, petId) {
+    try {
+      const connection = await pool.getConnection();
+      const [results, fields] = await connection.query(`
+        INSERT INTO user_liked_interactions (id_user, id_pet_liked) VALUES (?, ?)`,
+        [userId, petId]);
+      connection.release();
+      console.log(`setLikeRelation(${userId}, ${petId}) return: ${JSON.stringify(results)}`);
+      return results.insertId;
+    } catch (err) {
+      console.log('Error querying database: setLikeRelation', err);
+      console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+      throw new Error(err.sqlMessage);
+    }
+  }
+
+  async function setDislikeRelation(userId, petId) {
+    try {
+      const connection = await pool.getConnection();
+      const [results, fields] = await connection.query(`
+        INSERT INTO user_disliked_interactions (id_user, id_pet_disliked) VALUES (?, ?)`,
+        [userId, petId]);
+      connection.release();
+      console.log(`setDislikeRelation(${userId}, ${petId}) return: ${JSON.stringify(results)}`);
+      return results.insertId;
+    } catch (err) {
+      console.log('Error querying database: setDislikeRelation', err);
+      console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+      throw new Error(err.sqlMessage);
+    }
+  }
+
+  async function getSecondaryImagesURL(petId) {
+    try {
+      const connection = await pool.getConnection();
+      const [results, fields] = await connection.query(`
+        SELECT url FROM secondary_images_url WHERE id_pet = ?`,
+        [petId]);
+      connection.release();
+      console.log(`getSecondaryImagesURL(${petId}) return: ${JSON.stringify(results)}`);
+      
+      let urlList = [];
+      results.forEach( element => {
+        urlList.push(element.url);
+      })
+      
+      console.log(`urlList: ${urlList}`);
+      
+      return urlList;
+    } catch (err) {
+      console.log('Error querying database: getSecondaryImagesURL', err);
+      console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+      throw new Error(err.sqlMessage);
+    }
+  }
+
+  //CHECK THIS QUERY!
+  async function getLikedPets(userId) {
+    try {
+      const connection = await pool.getConnection();
+  
+      const [results, fields] = await connection.query(`SELECT pets.id, pets.id_user, pets.id_location, pets.main_image_URL, pets.name, pets.birthday,
+        pets.species, pets.breed, pets.gender, pets.description, pets.creation_datetime,
+        locations.country, locations.uf, locations.city, locations.latitude, locations.longitude
+        FROM pets
+        JOIN locations ON pets.id_location = locations.id
+        JOIN user_liked_interactions ON pets.id = user_liked_interactions.id_pet_liked
+        WHERE user_liked_interactions.id_user = ?;`, [userId]);
   
   
- 
+      connection.release();
+      console.log(`getLikedPets(${userId}) return: ${JSON.stringify(results)}`);
+      return results;
+    } catch (err) {
+      console.log('Error querying database: getLikedPets', err);
+      console.log("THE MESSAGE IS:  ->> ", err.sqlMessage, " <<-");
+      throw new Error(err.sqlMessage);
+    }
+  }
+
+
+module.exports = {
+  insertUser,
+  getUserData,
+  getLocationId,
+  insertLocation,
+  getPetsExceptMineLikedDisliked,
+  setLikeRelation,
+  setDislikeRelation,
+  getSecondaryImagesURL,
+  getLikedPets,
+  
+  getStudentData,
+  getTeacherQuestionsPageData,
+  getTeacherUserData,
+  updateQuestions,
+  setStudentData,
+  getExamPageQuestionsData,
+  getExamPageStudentData
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+backup examController
+
+//const bcrypt = require('bcrypt');
+//const jwt = require('jsonwebtoken');
+//const { jwtSecret } = require('../configPar');
+const { getPetsExceptMineLikedDisliked, setLikeRelation, setDislikeRelation, getSecondaryImagesURL,
+  getLikedPets, getTeacherData, getTeacherQuestionsPageData, updateQuestions, getExamPageQuestionsData,
+  getExamPageStudentData } = require('../Database/queries');
+
+module.exports.exam_post = async (req, res) => {
+
+}
+
+module.exports.answer_post = async (req, res) => {
+
+}
+
+//todo: use req.decodedToken.type to check if it is a teacher, if it is not -> deny access
+//todo: use this type in every get and post request here
+module.exports.questions_get = async (req, res) => {
+  try {
+    const userId = req.decodedToken.id;
+    const data = await getTeacherQuestionsPageData(userId);
+    console.log(data[0]);
+    console.log(`data length = ${data.length}`);
+
+    var questionsArray = [];
+    
+    for (let k = 0; k < data.length; k++) {
+      const questionObject = {}; // Create an object for each question
+      questionObject.id = data[k].id;
+      questionObject.question = data[k].question;
+      questionObject.correct_answer = data[k].correct_answer;
+      questionObject.wrong_answer_1 = data[k].wrong_answer_1;
+      questionObject.wrong_answer_2 = data[k].wrong_answer_2;
+      questionObject.wrong_answer_3 = data[k].wrong_answer_3;
+      questionObject.wrong_answer_4 = data[k].wrong_answer_4;
+      questionObject.number = k+1;
+      questionObject.media_type = data[k].media_type == null || data[k].media_type == "null" ? "" : data[k].media_type;
+      questionObject.media_name = data[k].media_name == null || data[k].media_name == "null" ? "" : data[k].media_name;
+      questionObject.media_url = data[k].media_url == null || data[k].media_url == "null" ? "" : data[k].media_url;
+      questionObject.media_source = data[k].media_source == null ||data[k]. media_source == "null" ? "" : data[k].media_source;
+      questionsArray.push(questionObject); // Add the question object to the array
+    }
+
+    const questionsPageData = {
+      teacherName: data[0].name,
+      subject: data[0].subject, // considering each teacher has just one subject
+      questionsArray: questionsArray
+    }
+
+    res.status(200).json(questionsPageData);   
+
+  } catch(e) {
+    console.log(e.toString());
+    res.status(400).json({message: e.toString()});
+  }
+}
+
+
+//todo: I will use the for loop there probably
+module.exports.exam_get = async (req, res) => {
+  try {
+    const userId = req.decodedToken.id;
+    
+    const studentData = await getExamPageStudentData(userId);
+    const questionsData = await getExamPageQuestionsData(userId);
+  
+
+    console.log(`studentData = ${JSON.stringify(studentData)}`);
+    //console.log(`studentData length = ${studentData.length}`);
+
+    console.log(`questionsData = ${JSON.stringify(questionsData)}`);
+    console.log(`questionsData length = ${questionsData.length}`);
+
+    var questionsArray = [];
+    var orderedQuestionsArray = [];
+    var mediasArray = [];
+
+
+    var mediaOtherArray = [];
+    var mediaAudioArray = [];
+    
+    
+    for (let k = 0; k < questionsData.length; k++) {
+      const questionObject = {}; // Create an object for each question
+      questionObject.questionText = questionsData[k].question;
+      questionObject.options = shuffleArray([
+        questionsData[k].correct_answer, questionsData[k].wrong_answer_1, questionsData[k].wrong_answer_2,
+        questionsData[k].wrong_answer_3, questionsData[k].wrong_answer_4
+      ]);
+
+      questionObject.id = questionsData[k].id;
+
+      questionObject.media_type = questionsData[k].media_type;
+      questionObject.media_name = questionsData[k].media_name;
+      questionObject.media_text = questionsData[k].media_text;
+      questionObject.media_url = questionsData[k].media_url;
+      console.log(`code 00001: `, questionObject.media_type, questionObject.media_name);
+      //todo: add what more is needed
+
+      if(questionObject.media_type != "no") {
+        //todo: I have to assure that front check media_name length 3 or more
+        //before send to api to send to DB
+        if(questionObject.media_type == "audio") {
+          if (!mediaAudioArray.some(media => media.media_name == questionObject.media_name)) {
+            mediaAudioArray.push({
+              media_name: questionObject.media_name,
+              media_type: questionObject.media_type    
+            });
+          } 
+        } else {
+          if (!mediaOtherArray.some(media => media.media_name == questionObject.media_name)) {
+            mediaOtherArray.push({
+              media_name: questionObject.media_name,
+              media_type: questionObject.media_type    
+            });
+          }
+        }
+      } else {
+        questionObject.media_name = '';
+        if(!mediaOtherArray.some(media => media.media_type == "no")) {
+          mediaOtherArray.push({
+            media_name: '',
+            media_type: "no"
+          });
+        }
+      }
+      
+      //questionObject.number = k+1; //todo: use index in front
+      questionsArray.push(questionObject);
+    }
+
+    //even starts with Audio
+    mediaAudioArray = shuffleArray(mediaAudioArray);
+    mediaOtherArray = shuffleArray(mediaOtherArray);
+    if((userId % 2) == 0) {
+      for(let k = 0; k < mediaAudioArray.length; k++) {
+        mediasArray.push(mediaAudioArray[k]);
+      }
+
+      for(let k = 0; k < mediaOtherArray.length; k++) {
+        mediasArray.push(mediaOtherArray[k]);
+      }
+      
+      //mediasArray.push(mediaAudioArray);
+      //mediasArray.push(mediaOtherArray);
+    } else {
+      for(let k = 0; k < mediaOtherArray.length; k++) {
+        mediasArray.push(mediaOtherArray[k]);
+      }
+
+      for(let k = 0; k < mediaAudioArray.length; k++) {
+        mediasArray.push(mediaAudioArray[k]);
+      }
+
+
+      //mediasArray.push(mediaOtherArray);
+      //mediasArray.push(mediaAudioArray);
+    }
+
+    console.log(`code 00002: mediasArray: `, JSON.stringify(mediasArray));
+
+    questionsArray = shuffleArray(questionsArray); 
+    
+    console.log(`code 00003: questionsArray: `, JSON.stringify(questionsArray));
+    
+    //let i = 0;
+
+    for(let k = 0; k < mediasArray.length; k++) {
+
+      let isFirstMedia = true;
+
+      for(let i = 0; i < questionsArray.length; i++) {
+        if(questionsArray[i].media_name == mediasArray[k].media_name) {
+          questionsArray[i].number = orderedQuestionsArray.length + 1;
+          questionsArray[i].isFirstMedia = isFirstMedia;
+          isFirstMedia = false;
+          orderedQuestionsArray.push(questionsArray[i]);
+          console.log(`k = ${k} and i = ${i}`);
+          console.log(`media_name: ${questionsArray[i].media_name}`);
+          console.log(`media_type questionsArray: ${questionsArray[i].media_type}`);
+          console.log(`media_type orderedQuestionsArray: ${JSON.stringify(orderedQuestionsArray)}`);
+          questionsArray.splice(i,1);
+          i--;
+          //continue;
+        }
+        //i++;
+      }
+      //i = 0;
+    }
+
+    const questionsPageData = {
+      studentName: studentData.name,
+      classroom: studentData.classroom,
+      numberId: studentData.number,
+      school: studentData.school,
+      questionsArray: orderedQuestionsArray
+    }
+
+    console.log(JSON.stringify(questionsPageData));
+
+    res.status(200).json(questionsPageData);   
+
+  } catch(e) {
+    console.log(e.toString());
+    res.status(400).json({message: e.toString()});
+  }
+}
+
+module.exports.questions_post = async (req, res) => {
+  try {
+    const userId = req.decodedToken.id;
+
+    const message = await updateQuestions(userId, req.body);
+
+    res.status(200).json({
+      message: message
+    });
+
+  } catch(e) {
+
+    //res.status(400).json({});
+    res.status(400).json({message: e.toString()});
+  }
+}
+
+
+
+
+module.exports.pets_get = async (req, res) => {
+
+  try {
+    const userId = req.decodedToken.id;
+    const petsList = await getPetsExceptMineLikedDisliked(userId);
+    console.log(petsList[0]);
+    console.log(`petsList length = ${petsList.length}`);
+    
+    await getUrlsAndFormatBirthday(petsList);
+    console.log("after forEach: ", petsList[10]);
+    console.log(`after forEach: petsList length = ${petsList.length}`);
+
+    res.status(200).json({
+      petsList: petsList
+    });   
+
+  } catch(e) {
+
+    //res.status(400).json({});
+    res.status(400).json({message: e.toString()});
+  }
+
+}
+
+//todo: use try catch here is probably a good idea
+async function getUrlsAndFormatBirthday(petsList) {
+  const promises = petsList.map(async (element) => {
+    element.secondary_images_URL = await getSecondaryImagesURL(element.id);
+
+    const date = new Date(element.birthday);
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    //element.birthday = formattedDate.replace(/-/g, "/");
+    element.birthday = formattedDate;
+    return element;
+  });
+
+  // Wait for all promises to resolve
+  return Promise.all(promises);
+}
+
+
+//todo: implement this function
+module.exports.like_pet_post = async (req, res) => {
+
+  try {
+    const userId = req.decodedToken.id;
+    const petId = req.body.petId;
+    console.log(`LIKE petId -> ${petId}`);
+
+    const insertId = await setLikeRelation(userId, petId);
+
+    res.status(200).json({
+      message: "Success"
+    });
+
+  } catch(e) {
+
+    //res.status(400).json({});
+    res.status(400).json({message: e.toString()});
+  }
+}
+
+module.exports.dislike_pet_post = async (req, res) => {
+
+  try {
+    const userId = req.decodedToken.id;
+    const petId = req.body.petId;
+    console.log(`DISLIKE petId -> ${petId}`);
+
+    const insertId = await setDislikeRelation(userId, petId);
+
+    res.status(200).json({
+      message: "Success"
+    });
+
+  } catch(e) {
+
+    //res.status(400).json({});
+    res.status(400).json({message: e.toString()});
+  }
+}
+
+
+module.exports.pets_grid_get = async (req, res) => {
+
+  try {
+    const userId = req.decodedToken.id;
+    const petsLikedList = await getLikedPets(userId);
+    console.log(petsLikedList[0]);
+    console.log(`petsLikedList length = ${petsLikedList.length}`);
+    
+    await getUrlsAndFormatBirthday(petsLikedList);
+    console.log("after forEach: ", petsLikedList[0]);
+    console.log(`after forEach: petsLikedList length = ${petsLikedList.length}`);
+
+    res.status(200).json({
+      petsList: petsLikedList
+    });   
+
+  } catch(e) {
+
+    //res.status(400).json({});
+    res.status(400).json({message: e.toString()});
+  }
+
+
+}
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+
+
+
+
+

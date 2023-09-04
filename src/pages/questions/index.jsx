@@ -2,8 +2,10 @@ import './styles.css';
 import React, { useState, useRef, useEffect } from 'react';
 import Question from '../../components/Question';
 import { useResponse } from '../../contexts/responseContext'
-import { getExamData } from '../../components/api';
+import { getExamData, postExam } from '../../components/api';
 import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
+import Modal from '../../components/modal';
+//todo: make the notification using modal when send exam
 
 export function Questions() {
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -13,6 +15,7 @@ export function Questions() {
   const [numberId, setNumberId] = useState('numberId');
   const [school, setSchool] = useState('School Name');
   const [questions, setQuestions] = useState([]);
+  //const [examOptions, setExamOptions] = useState([]);
   //const { response } = useResponse(); //I think I wont be using it
 
 
@@ -36,6 +39,38 @@ export function Questions() {
       });
   }, []); // The empty array ensures the effect runs only on mount
 
+  async function handleFinish() {
+    // Once finished, provide user feedback
+
+    /*
+    setExamOptions(Object.keys(selectedOptions).map((id) => ({
+      id: parseInt(id),
+      option: selectedOptions[id]
+    })));
+    */
+   let examOptions = Object.keys(selectedOptions).map((id) => ({
+    id: parseInt(id),
+    option: selectedOptions[id]
+  }));
+
+    console.log("Json sent: ", JSON.stringify(examOptions));
+
+    try {
+      const data = await postExam(getCookie("jwt_token"), examOptions);
+
+      if (data.message == "success") {
+        // Positive feedback to the user on successful save
+        //setModalMessage("Prova enviada com sucesso!");
+      } else {
+        // Negative feedback to the user with the error message
+        //setModalMessage(`Erro ao enviar a prova: ${data.message}`);
+      }
+    } catch (error) {
+      //setModalMessage(`Erro ao enviar a prova: ${error.message}`);
+    }
+    //setModalOpen(true);
+  };
+  
 
   const handleOptionChange = (questionId, option) => {
     setSelectedOptions(prevOptions => ({
@@ -60,10 +95,12 @@ export function Questions() {
   return (
     <div className="questions-container">
       <header className="questions-header">
+        <div className="student-id-info fixed-header">{studentName}, {numberId}, {classromm}</div>
+        <br/>
         <h1 className="questions-header-title">Bem vindo(a), {studentName}!<br /><br />1ª Olímpiada do Conhecimento</h1>
-        <h2 className="questions-header-subtitle">Prefeitura Municipal de São João do Oeste</h2>
+        <h2 className="questions-header-subtitle">Escola De Educação Básica Madre Benvenuta</h2>
         <p className="questions-header-description">
-          Secretaria de Educação - Secretaria de Cultura<br/><br/>Sistema de Luciano Bracht
+          Sistema de Luciano Bracht
         </p>
         <p className="questions-header-description">
           Apoio:
@@ -80,17 +117,17 @@ export function Questions() {
       <div className="questions-list">
         {questions.map((question) => (
           <Question
-            key={question.number}//.id
+            key={question.id}//.id
             question={question}
-            selectedOption={selectedOptions[question.number]}//.id
-            onOptionChange={(option) => handleOptionChange(question.number, option)}//.id
+            selectedOption={selectedOptions[question.id]}//.id
+            onOptionChange={(option) => handleOptionChange(question.id, option)}//.id
           />
         ))}
       </div>
 
       {questions.length > 0 && (
-        <div className="questions-calculate-button">
-          <button type="button" onClick={calculateScore}>
+        <div className="questions-finish-button">
+          <button type="button" onClick={handleFinish}>
             Entregar
           </button>
         </div>

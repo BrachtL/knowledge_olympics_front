@@ -40,3 +40,14 @@
   justify-content: center;
   align-items: center;
 }
+
+.fixed-header {
+  font-size: 24px;
+  color: #ff0000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff; /* Set the background color you desire */
+  z-index: 1000; /* Set an appropriate z-index value to ensure it appears above other content */
+}

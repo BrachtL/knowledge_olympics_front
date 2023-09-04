@@ -72,12 +72,35 @@ export function Questions() {
   };
   
 
-  const handleOptionChange = (questionId, option) => {
+  const handleOptionChange = async (questionId, option) => {
     setSelectedOptions(prevOptions => ({
       ...prevOptions,
       [questionId]: option
     }));
     // TODO: save the selected options in the database
+
+    let examOptions = [{
+      id: questionId,
+      option: option
+    }]
+
+    try {
+
+      console.log("Json sent: ", JSON.stringify(examOptions));
+      const data = await postExam(getCookie("jwt_token"), examOptions);
+
+      if (data.message == "success") {
+        // Positive feedback to the user on successful save
+        //setModalMessage("Prova enviada com sucesso!");
+      } else {
+        // Negative feedback to the user with the error message
+        //setModalMessage(`Erro ao enviar a prova: ${data.message}`);
+      }
+    } catch (error) {
+      //setModalMessage(`Erro ao enviar a prova: ${error.message}`);
+    }
+
+
   };
 
   const calculateScore = () => {

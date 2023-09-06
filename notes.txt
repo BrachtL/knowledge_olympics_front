@@ -1054,8 +1054,8 @@ module.exports.pets_grid_get = async (req, res) => {
 
 NEXT STEPS (security/login/fraud)
 
-	!!!!!!!!!! prevent teacher to log in when there is cookie saved
-	(like I already did in student login page)
+		DONE: - prevent teacher to log in when there is cookie saved
+		(like I already did in student login page)
 
 		DONE: - match the type alongsige with id, since there are duplicated ids
 		between types
@@ -1084,16 +1084,20 @@ NEXT STEPS (security/login/fraud)
 	- when save and every 5 seconds
 	
 	
-	
+		
 	FRONT COMMIT MESSAGE:
-		FEATURE: prevent login when there is a jwt cookie; if id and tyoe sent
-		through body doest not match those on jwt header, erase cookie
-		and refresh page
+		FEATURE: prevent teacher login if there is jwt cookie; match cookie interval 5 seconds
+			DONE:
+			FEATURE: prevent login when there is a jwt cookie; if id and tyoe sent
+			through body doest not match those on jwt header, erase cookie
+			and refresh page; fix redirecting always sending to student login page
+			
 		
-	
 	BACK COMMIT MESSAGE:
-		FEATURE: userId is now sent with user's data, matchCookie
-		
+			
+			DONE:
+			FEATURE: userId is now sent with user's data, matchCookie
+			
 		
 
 */

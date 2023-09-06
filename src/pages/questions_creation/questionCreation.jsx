@@ -29,6 +29,21 @@ const TeacherQuestionCreation = () => {
       });
   }, []); // The empty array ensures the effect runs only on mount
 
+  useEffect(() => {
+    if (userId != -1) {
+
+      matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token"));
+      const intervalId = setInterval(
+        () => matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token")),
+        5000
+      );
+      console.log("start interval");
+  
+      // Cleanup the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [userId]);
+
   async function handleSave() {
     // Once saved, provide user feedback
     console.log("Questions saved:", questions);

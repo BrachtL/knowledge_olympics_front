@@ -41,6 +41,21 @@ export function Questions() {
       });
   }, []); // The empty array ensures the effect runs only on mount
 
+  useEffect(() => {
+    if (userId != -1) {
+
+      matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token"));
+      const intervalId = setInterval(
+        () => matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token")),
+        5000
+      );
+      console.log("start interval");
+  
+      // Cleanup the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [userId]);
+
   async function handleFinish() {
     // Once finished, provide user feedback
 

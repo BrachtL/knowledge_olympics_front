@@ -19,31 +19,38 @@ const StudentLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      // Perform validation and login logic here
-
-      // Simulate submitting student data
-      const data = { name, birthdate, numberId, classroom, school, type : "student" };
-      const token = await login(data);
-
-      // Handle the response from the server
-      //if (response.success) {
-
-        setCookie('jwt_token', token, 7); // Store the token for 7 days
-
-
-        navigate('/questions');
-
+    if(getCookie('jwt_token')) {
+      console.log("Já tem cookie");
+      setError('Já há um usuário conectado');
+      //todo: show in a modal the message "Não foi possível realizar o login,
+      //pois já há um usuário conectado. Clique ok para redirecionar."
+    } else {
+      try {
+        // Perform validation and login logic here
+  
+        // Simulate submitting student data
+        const data = { name, birthdate, numberId, classroom, school, type : "student" };
+        const token = await login(data);
+  
+        // Handle the response from the server
+        //if (response.success) {
+  
+          setCookie('jwt_token', token, 7); // Store the token for 7 days
+  
+  
+          navigate('/questions');
+  
+          // Redirect user to dashboard or another page if successful
+          // For example, you can use React Router for navigation
+        //} else {
+        //  setError('Something went wrong. Please try again.');
+        //}
+  
         // Redirect user to dashboard or another page if successful
-        // For example, you can use React Router for navigation
-      //} else {
-      //  setError('Something went wrong. Please try again.');
-      //}
-
-      // Redirect user to dashboard or another page if successful
-    } catch (err) {
-      console.log(err);
-      setError('Something went wrong. Please try again.');
+      } catch (err) {
+        console.log(err);
+        setError('Something went wrong. Please try again.');
+      }
     }
   };
 

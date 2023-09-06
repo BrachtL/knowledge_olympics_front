@@ -1,4 +1,47 @@
 const BASE_URL = 'https://knowledge-olympics-back.glitch.me'; //todo: change this url
+import { setCookie, getCookie, deleteCookie } from '../cookieHandler';
+
+export async function matchCookie(userIdAndType, token) {
+  const url = `${BASE_URL}/matchCookie`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify(userIdAndType)
+      //teacher: name, password, type
+      //student: name, birthdate, numberId, classroom, school, type
+      //todo: I need id property on teacher and student
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      if (response.status === 401) {
+        console.log("checkpoint 00012");
+        console.log("inside match fail");
+        deleteCookie("jwt_token");
+        if(userIdAndType.type == "student") {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/teacher';
+        }
+        
+      } else {
+        console.log(errorData);
+        throw new Error('Authentication failed');
+      }
+    } 
+  } catch (error) {
+    console.log(error);
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
 
 export async function login(userData) {
   const url = `${BASE_URL}/login`;

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./styles.css";
 import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
-import { getTeacherQuestionsData, postTeacherQuestionsData } from '../../components/api';
+import { getTeacherQuestionsData, postTeacherQuestionsData, matchCookie } from '../../components/api';
 import Modal from '../../components/modal';
 
 const TeacherQuestionCreation = () => {
@@ -12,6 +12,7 @@ const TeacherQuestionCreation = () => {
   const [questions, setQuestions] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [userId, setUserId] = useState(-1);
 
   useEffect(() => {
     // Fetch data from backend API here and set the state accordingly
@@ -21,6 +22,7 @@ const TeacherQuestionCreation = () => {
         setTeacherName(data.teacherName);
         setSubject(data.subject);
         setQuestions(data.questionsArray);
+        setUserId(data.userId);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -33,6 +35,9 @@ const TeacherQuestionCreation = () => {
     console.log("Json sent: ", JSON.stringify(modifiedContent));
 
     try {
+      
+      const cookieMatchResponse = await matchCookie({userId: userId, type: "teacher"}, getCookie("jwt_token"));
+
       const data = await postTeacherQuestionsData(getCookie("jwt_token"), questions);
 
       if (data.message == "success") {

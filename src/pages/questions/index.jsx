@@ -2,7 +2,7 @@ import './styles.css';
 import React, { useState, useRef, useEffect } from 'react';
 import Question from '../../components/Question';
 import { useResponse } from '../../contexts/responseContext'
-import { getExamData, postExam } from '../../components/api';
+import { getExamData, postExam, matchCookie } from '../../components/api';
 import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
 import Modal from '../../components/modal';
 //todo: make the notification using modal when send exam
@@ -15,6 +15,7 @@ export function Questions() {
   const [numberId, setNumberId] = useState('numberId');
   const [school, setSchool] = useState('School Name');
   const [questions, setQuestions] = useState([]);
+  const [userId, setUserId] = useState(-1);
   //const [examOptions, setExamOptions] = useState([]);
   //const { response } = useResponse(); //I think I wont be using it
 
@@ -29,6 +30,7 @@ export function Questions() {
         setNumberId(data.numberId);
         setSchool(data.school);
         setQuestions(data.questionsArray); //todo: must have number, id, questionText, options
+        setUserId(data.userId);
         //todo: I need media: an array with media objects:
         //type, //text, audio, image, none
         //if type == text -> text, title
@@ -56,8 +58,15 @@ export function Questions() {
     console.log("Json sent: ", JSON.stringify(examOptions));
 
     try {
+
+      const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
+
+      console.log("checkpoint 00014");
+
       const data = await postExam(getCookie("jwt_token"), examOptions);
 
+      //todo: modify this code: I dont need this if
+      //if it would have an error, it will be catch down below
       if (data.message == "success") {
         // Positive feedback to the user on successful save
         //setModalMessage("Prova enviada com sucesso!");
@@ -67,6 +76,8 @@ export function Questions() {
       }
     } catch (error) {
       //setModalMessage(`Erro ao enviar a prova: ${error.message}`);
+      console.log("checkpoint 00015");
+      console.log(error);
     }
     //setModalOpen(true);
   };
@@ -86,21 +97,32 @@ export function Questions() {
 
     try {
 
+      const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
+
+      console.log("checkpoint 00011");
+      
+
       console.log("Json sent: ", JSON.stringify(examOptions));
       const data = await postExam(getCookie("jwt_token"), examOptions);
 
+      //todo: modify this code: I dont need this if
+      //if it would have an error, it will be catch down below
       if (data.message == "success") {
         // Positive feedback to the user on successful save
         //setModalMessage("Prova enviada com sucesso!");
       } else {
+        //it will never be here, because API just send success message with
+        //status code 200
         // Negative feedback to the user with the error message
         //setModalMessage(`Erro ao enviar a prova: ${data.message}`);
       }
+      
     } catch (error) {
+      console.log("checkpoint 00013");
+      console.log(error);
       //setModalMessage(`Erro ao enviar a prova: ${error.message}`);
+
     }
-
-
   };
 
   const calculateScore = () => {

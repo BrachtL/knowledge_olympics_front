@@ -16,7 +16,8 @@ const TeacherQuestionCreation = () => {
 
   useEffect(() => {
     // Fetch data from backend API here and set the state accordingly
-    getTeacherQuestionsData(getCookie("jwt_token"))
+    getTeacherQuestionsData(sessionStorage.getItem('jwt_token'))
+    //getTeacherQuestionsData(getCookie("jwt_token"))
       .then(data => {
         console.log("NAME HERE: ", data.teacherName);
         setTeacherName(data.teacherName);
@@ -32,9 +33,11 @@ const TeacherQuestionCreation = () => {
   useEffect(() => {
     if (userId != -1) {
 
-      matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token"));
+      matchCookie({ userId: userId, type: "teacher" }, sessionStorage.getItem('jwt_token'));
+      //matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token"));
       const intervalId = setInterval(
-        () => matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token")),
+        () => matchCookie({ userId: userId, type: "teacher" }, sessionStorage.getItem('jwt_token')),
+        //() => matchCookie({ userId: userId, type: "teacher" }, getCookie("jwt_token")),
         5000
       );
       console.log("start interval");
@@ -51,9 +54,11 @@ const TeacherQuestionCreation = () => {
 
     try {
       
-      const cookieMatchResponse = await matchCookie({userId: userId, type: "teacher"}, getCookie("jwt_token"));
+      const cookieMatchResponse = await matchCookie({userId: userId, type: "teacher"}, sessionStorage.getItem('jwt_token'));
+      //const cookieMatchResponse = await matchCookie({userId: userId, type: "teacher"}, getCookie("jwt_token"));
 
-      const data = await postTeacherQuestionsData(getCookie("jwt_token"), questions);
+      const data = await postTeacherQuestionsData(sessionStorage.getItem('jwt_token'), questions);
+      //const data = await postTeacherQuestionsData(getCookie("jwt_token"), questions);
 
       if (data.message == "success") {
         // Positive feedback to the user on successful save
@@ -134,7 +139,8 @@ const TeacherQuestionCreation = () => {
 
   const handleLogout = () => {
     //todo: send the cookie to API to save in blacklist 
-    deleteCookie("jwt_token");
+    sessionStorage.removeItem('jwt_token');
+    //deleteCookie("jwt_token");
     window.location.href = '/teacher';
   };
 

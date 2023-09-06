@@ -1060,8 +1060,8 @@ NEXT STEPS (security/login/fraud)
 		DONE: - match the type alongsige with id, since there are duplicated ids
 		between types
 
-	- every 5 seconds check if the cookie's id is the same the id
-	I have in the frontend pagedata: send both to API and check if it matches
+		DONE: - every 5 seconds check if the cookie's id is the same the id
+		I have in the frontend pagedata: send both to API and check if it matches
 		create a resource for it (/checkLogin POST)
 	
 		DONE: - on the function I already have to save questions -> execute the
@@ -1081,13 +1081,14 @@ NEXT STEPS (security/login/fraud)
 	
 	
 		DONE: - use matchCookie thing on teacher question-creation as well
-	- when save and every 5 seconds
+		- when save and every 5 seconds
 	
 	
 		
 	FRONT COMMIT MESSAGE:
-		FEATURE: prevent teacher login if there is jwt cookie; match cookie interval 5 seconds
+		
 			DONE:
+			FEATURE: prevent teacher login if there is jwt cookie; match cookie interval 5 seconds
 			FEATURE: prevent login when there is a jwt cookie; if id and tyoe sent
 			through body doest not match those on jwt header, erase cookie
 			and refresh page; fix redirecting always sending to student login page
@@ -1099,6 +1100,12 @@ NEXT STEPS (security/login/fraud)
 			FEATURE: userId is now sent with user's data, matchCookie
 			
 		
+
+*/
+
+/*
+
+change student's cookie expiration time from 7 days to 2h
 
 */
 

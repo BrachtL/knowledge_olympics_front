@@ -22,6 +22,7 @@ export function Questions() {
 
   useEffect(() => {
     // Fetch data from backend API here and set the state accordingly
+    //getExamData(sessionStorage.getItem('jwt_token'))
     getExamData(getCookie("jwt_token"))
       .then(data => {
         console.log("NAME HERE: ", data.studentName);
@@ -44,8 +45,10 @@ export function Questions() {
   useEffect(() => {
     if (userId != -1) {
 
+      //matchCookie({ userId: userId, type: "student" }, sessionStorage.getItem('jwt_token'));
       matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token"));
       const intervalId = setInterval(
+        //() => matchCookie({ userId: userId, type: "student" }, sessionStorage.getItem('jwt_token')),
         () => matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token")),
         5000
       );
@@ -74,10 +77,12 @@ export function Questions() {
 
     try {
 
+      //const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, sessionStorage.getItem('jwt_token'));
       const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
 
       console.log("checkpoint 00014");
 
+      //const data = await postExam(sessionStorage.getItem('jwt_token'), examOptions);
       const data = await postExam(getCookie("jwt_token"), examOptions);
 
       //todo: modify this code: I dont need this if
@@ -112,12 +117,14 @@ export function Questions() {
 
     try {
 
+      //const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, sessionStorage.getItem('jwt_token'));
       const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
 
       console.log("checkpoint 00011");
       
 
       console.log("Json sent: ", JSON.stringify(examOptions));
+      //const data = await postExam(sessionStorage.getItem('jwt_token'), examOptions);
       const data = await postExam(getCookie("jwt_token"), examOptions);
 
       //todo: modify this code: I dont need this if

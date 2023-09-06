@@ -15,7 +15,8 @@ const TeacherLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if(getCookie('jwt_token')) {
+    if(sessionStorage.getItem('jwt_token')) {
+    //if(getCookie('jwt_token')) {
       console.log("Já tem cookie");
       setError('Já há um usuário conectado');
       //todo: show in a modal the message "Não foi possível realizar o login,
@@ -41,7 +42,8 @@ const TeacherLogin = () => {
         console.log(token); //todo: remove it
         //todo: I have to save it someway and add to further request's headers
 
-        setCookie('jwt_token', token, 7); // Store the token for 7 days
+        sessionStorage.setItem('jwt_token', token);
+        //setCookie('jwt_token', token, 7); // Store the token for 7 days
 
 
         navigate('/teacher-questions');

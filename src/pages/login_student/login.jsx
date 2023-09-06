@@ -19,6 +19,7 @@ const StudentLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    //if(sessionStorage.getItem('jwt_token')) {
     if(getCookie('jwt_token')) {
       console.log("Já tem cookie");
       setError('Já há um usuário conectado');
@@ -35,6 +36,7 @@ const StudentLogin = () => {
         // Handle the response from the server
         //if (response.success) {
   
+          //sessionStorage.setItem('jwt_token', token);
           setCookie('jwt_token', token, 7); // Store the token for 7 days
   
   

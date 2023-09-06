@@ -25,10 +25,12 @@ export async function matchCookie(userIdAndType, token) {
       if (response.status === 401) {
         console.log("checkpoint 00012");
         console.log("inside match fail");
-        deleteCookie("jwt_token");
+        //deleteCookie("jwt_token");
         if(userIdAndType.type == "student") {
+          deleteCookie("jwt_token");
           window.location.href = '/';
         } else {
+          sessionStorage.removeItem('jwt_token');
           window.location.href = '/teacher';
         }
         

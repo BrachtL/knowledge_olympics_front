@@ -1,8 +1,4 @@
 /* CSS for the questions-header */
-.questions-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
 
 /* Additional CSS for the header title and subtitle */
 .questions-header-title {
@@ -41,13 +37,73 @@
   align-items: center;
 }
 
+
+
+.questions-header {
+  margin-top: 30px;
+  position: relative;
+  text-align: center;
+  color: black;
+  
+  /* background was here */
+
+  opacity: 1; /* Adjust the opacity as needed */
+}
+
 .fixed-header {
+  background-color: rgba(0, 0, 0, 0.8); /* Background color for the fixed info */
   font-size: 24px;
-  color: #ff0000;
+  color: white;
+  padding: 10px;
+  text-align: center;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  background-color: #ffffff; /* Set the background color you desire */
-  z-index: 1000; /* Set an appropriate z-index value to ensure it appears above other content */
+  right: 0;
+  margin-right: 8px;
+  margin-left: 8px;
+  z-index: 1000; /* Ensure it's above the header content */
+}
+
+.questions-header-content {
+  padding: 20px;
+}
+
+.questions-entities-list .entity {
+  font-size: 20px;
+  margin: 50px;
+}
+
+.questions-container {
+  background-color: #f0f0f0; /* Fallback color if the image fails to load */
+  background-image: url(''); /* Replace with your image path */
+  background-size: auto;
+  background-repeat: repeat;
+  opacity: 0.8; /* Adjust the opacity as needed */
+}
+
+.questions-finish-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+  padding: 10px 0;
+}
+
+
+.questions-finish-button {
+  background-color: #cc0000; /* Red color */
+  color: #ffffff; /* White text color */
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px; /* Adjust padding for a larger button */
+  font-size: 26px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 10px; /* Add margin on both sides */
+  margin-bottom: 40px;
+}
+
+.questions-finish-button:hover {
+  /* Hover effect for the logout buttons */
+  background-color: #ee0000;
 }

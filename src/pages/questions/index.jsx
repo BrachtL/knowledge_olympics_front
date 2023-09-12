@@ -53,7 +53,7 @@ export function Questions() {
         5000
       );
       console.log("start interval");
-  
+
       // Cleanup the interval when the component unmounts
       return () => clearInterval(intervalId);
     }
@@ -68,17 +68,17 @@ export function Questions() {
       option: selectedOptions[id]
     })));
     */
-   let examOptions = Object.keys(selectedOptions).map((id) => ({
-    id: parseInt(id),
-    option: selectedOptions[id]
-  }));
+    let examOptions = Object.keys(selectedOptions).map((id) => ({
+      id: parseInt(id),
+      option: selectedOptions[id]
+    }));
 
     console.log("Json sent: ", JSON.stringify(examOptions));
 
     try {
 
       //const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, sessionStorage.getItem('jwt_token'));
-      const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
+      const cookieMatchResponse = await matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token"));
 
       console.log("checkpoint 00014");
 
@@ -101,7 +101,7 @@ export function Questions() {
     }
     //setModalOpen(true);
   };
-  
+
 
   const handleOptionChange = async (questionId, option) => {
     setSelectedOptions(prevOptions => ({
@@ -118,10 +118,10 @@ export function Questions() {
     try {
 
       //const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, sessionStorage.getItem('jwt_token'));
-      const cookieMatchResponse = await matchCookie({userId: userId, type: "student"}, getCookie("jwt_token"));
+      const cookieMatchResponse = await matchCookie({ userId: userId, type: "student" }, getCookie("jwt_token"));
 
       console.log("checkpoint 00011");
-      
+
 
       console.log("Json sent: ", JSON.stringify(examOptions));
       //const data = await postExam(sessionStorage.getItem('jwt_token'), examOptions);
@@ -138,7 +138,7 @@ export function Questions() {
         // Negative feedback to the user with the error message
         //setModalMessage(`Erro ao enviar a prova: ${data.message}`);
       }
-      
+
     } catch (error) {
       console.log("checkpoint 00013");
       console.log(error);
@@ -164,21 +164,12 @@ export function Questions() {
       <header className="questions-header">
         <div className="student-id-info fixed-header">{studentName}, {numberId}, {classromm}</div>
         <br/>
-        <h1 className="questions-header-title">Bem vindo(a), {studentName}!<br /><br />1ª Olímpiada do Conhecimento</h1>
+        <h1 className="questions-header-title">Bem vindo(a), {studentName}!<br /><br />1ª Olímpiada da Língua Alemã</h1>
         <h2 className="questions-header-subtitle">Escola De Educação Básica Madre Benvenuta</h2>
         <p className="questions-header-description">
           Sistema de Luciano Bracht
         </p>
-        <p className="questions-header-description">
-          Apoio:
-        </p>
-        <div className="questions-entities-list">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div key={index} className="entity">
-              Entidade {String.fromCharCode(65 + index)}
-            </div>
-          ))}
-        </div>
+        <br/>
       </header>
 
       <div className="questions-list">
@@ -193,8 +184,8 @@ export function Questions() {
       </div>
 
       {questions.length > 0 && (
-        <div className="questions-finish-button">
-          <button type="button" onClick={handleFinish}>
+        <div className="questions-finish-button-container">
+          <button className="questions-finish-button" onClick={handleFinish}>
             Entregar
           </button>
         </div>
@@ -204,3 +195,30 @@ export function Questions() {
     </div>
   );
 }
+
+/*
+
+      <header className="questions-header">
+        <div className="fixed-header">
+          {studentName}, {numberId}, {classromm}
+        </div>
+        <div className="questions-header-content">
+          <h1 className="questions-header-title">Bem vindo(a), {studentName}!<br /><br />1ª Olímpiada do Conhecimento</h1>
+          <h2 className="questions-header-subtitle">Escola De Educação Básica Madre Benvenuta</h2>
+          <p className="questions-header-description">
+            Sistema de Luciano Bracht
+          </p>
+          <p className="questions-header-description">
+            Apoio:
+          </p>
+          <div className="questions-entities-list">
+            {Array.from({ length: 8 }, (_, index) => (
+              <div key={index} className="entity">
+                Entidade {String.fromCharCode(65 + index)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </header>
+
+*/

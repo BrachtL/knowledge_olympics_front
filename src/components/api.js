@@ -65,10 +65,20 @@ export async function login(userData) {
       const data = await response.json();
       return data.token; // todo: define this data (necessary data to load the next page)
     } else {
-      throw new Error('Authentication failed');
+      
+      if (err.response && err.response.data && err.response.data.message) {
+        throw new Error(err.response.data.message);
+      } else {
+        throw new Error('Authentication failed');
+      }
     }
   } catch (error) {
-    throw new Error('Something went wrong. Please try again.');
+    if(error.message){
+      throw new Error(error.message);
+    } else {
+      throw new Error('Something went wrong. Please try again.');
+    }
+    
   }
 }
 

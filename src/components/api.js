@@ -1,4 +1,4 @@
-const BASE_URL = 'https://knowledge-olympics-back.glitch.me'; //todo: change this url
+const BASE_URL = 'https://knowledge-olympics-back.glitch.me';
 import { setCookie, getCookie, deleteCookie } from '../cookieHandler';
 
 export async function matchCookie(userIdAndType, token) {
@@ -179,6 +179,30 @@ export async function postExam(token, examOptions) {
         'token': token
       },
       body: JSON.stringify(examOptions)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data// todo: define this data (necessary data to show if it was successful)
+    } else {
+      throw new Error('Authentication failed');
+    }
+  } catch (error) {
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+export async function postFinish(token) {
+  const url = `${BASE_URL}/exam/finish`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      //body: JSON.stringify(examOptions)
     });
 
     if (response.ok) {

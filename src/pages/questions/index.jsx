@@ -2,7 +2,7 @@ import './styles.css';
 import React, { useState, useRef, useEffect } from 'react';
 import Question from '../../components/Question';
 import { useResponse } from '../../contexts/responseContext'
-import { getExamData, postExam, matchCookie } from '../../components/api';
+import { getExamData, postExam, matchCookie, postFinish } from '../../components/api';
 import { setCookie, getCookie, deleteCookie } from '../../cookieHandler';
 import Modal from '../../components/modal';
 //todo: make the notification using modal when send exam
@@ -16,6 +16,7 @@ export function Questions() {
   const [school, setSchool] = useState('School Name');
   const [questions, setQuestions] = useState([]);
   const [userId, setUserId] = useState(-1);
+  //const [isFinished, setIsFinished] = useState()
   //const [examOptions, setExamOptions] = useState([]);
   //const { response } = useResponse(); //I think I wont be using it
 
@@ -39,6 +40,9 @@ export function Questions() {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        //todo: erase cookie and show modal saying something related to isFinished
+        //redirect when click on ok button
+
       });
   }, []); // The empty array ensures the effect runs only on mount
 
@@ -82,12 +86,19 @@ export function Questions() {
 
       console.log("checkpoint 00014");
 
+      //todo: show loading here and block the button
+
       //const data = await postExam(sessionStorage.getItem('jwt_token'), examOptions);
       const data = await postExam(getCookie("jwt_token"), examOptions);
 
       //todo: modify this code: I dont need this if
       //if it would have an error, it will be catch down below
       if (data.message == "success") {
+        const finished = await postFinish(getCookie("jwt_token"));
+        deleteCookie("jwt_token");
+        //todo: show modal
+        getCookie("jwt_token");
+
         // Positive feedback to the user on successful save
         //setModalMessage("Prova enviada com sucesso!");
       } else {

@@ -318,16 +318,24 @@ find out why I am having "err is not defined" in teacher and student
 login page when the user does not exist
 */
 
+
+ALTER TABLE students
+ADD is_finished BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE students
+ADD is_started BOOLEAN DEFAULT FALSE;
+
+
 /*
 
 fields to be created in DB
 1 - table student / finished: (prevent users to answer after the time ended and prevent next
 							   students to see privious students answers)
-	- when true, cannot open the exam anymore
-	- is checked when loading the questions page
+	done: - when true, cannot open the exam anymore
+	done: - is checked when loading the questions page
 		//and when sending anything to save during the exam
-		and on the setInterval function (matchCookie that will be changed to valdiateStudent)
-	- is set true when clicking on exam page button
+	todo:	and on the setInterval function (matchCookie that will be changed to valdiateStudent)
+	done: - is set true when clicking on exam page button
 	(I can force finished for all created users on my control, it will prevent
 	the next students to see the previous exams if someone does not manage to send
 	the exam)
@@ -336,12 +344,16 @@ fields to be created in DB
 		
 2 - table student / initiated: (prevent 2 people logged in the same name (fraud) and prevent
 								the student itself to log in and see the exam at home)
-	- when true, no one can login again with this info
-	- is checked on login page when clicking on the button
+	done: - when true, no one can login again with this info
+	done: - is checked on login page when clicking on the button
+	done: - is set when load exam page data (I am setting it every load, change it in the future)
 	(if power went out, the cookie will remain saved and when the user open the login
 	page, he will be redirected to the exam page)
 	(on my control panel, I change initiated to false if user needs to login again for
 	some weird reason, but he will have to login on anonymous page probably)
+	
+	TODO: show error messages regarding is finished and is initiated
+	TODO: show modals when they happen
 	
 table control / code1_enabled, code2_enabled
 				(when true, can create users)

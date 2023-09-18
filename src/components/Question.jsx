@@ -11,6 +11,14 @@ function Question({ question, selectedOption, onOptionChange }) {
           <h2>{question.media_name}</h2>
           <div dangerouslySetInnerHTML={{ __html: question.media_text }} />
           {console.log("checkpoint 00001")}
+          {//TODO: I need x from the backend > questions page
+          /*
+          <br/>
+          <h2>Answer the next x questions based on that media</h2>
+          <br/>
+          <br/>
+          */
+        }
         </div>
       )}
 
@@ -21,19 +29,56 @@ function Question({ question, selectedOption, onOptionChange }) {
             <source src={question.media_url} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
+          <br />
+          {//TODO: I need x from the backend > questions page
+          /*
           <br/>
+          <h2>Answer the next x questions based on that media</h2>
+          <br/>
+          <br/>
+          */
+        }
         </div>
       )}
 
       {question.media_type == 'image' && question.isFirstMedia == true && (
         <div className="image-content">
-          <h2>There is an image here, named: {question.media_name}</h2>
-          {/* Render the media content */}
+          <h2>{question.media_name}</h2>
+          <br />
+          <img
+            src={question.media_url}
+            alt='A imagem não pôde ser carregada'
+            style={{ maxWidth: '25%', height: 'auto' }}
+          />
+          <br />
+          <br />
+          {//TODO: I need x from the backend > questions page
+          /*
+          <br/>
+          <h2>Answer the next x questions based on that media</h2>
+          <br/>
+          <br/>
+          */
+          }
         </div>
       )}
 
-      {/*todo*/}
-      {/* make something with "no" media type? */}
+      {question.media_type == 'no' && question.isFirstMedia == true && (
+        <div className="no-content">
+          <br/>
+          <h2>Die nächsten Fragen beziehen sich nicht auf Medien</h2>
+          <br/>
+          <br/>
+          {//TODO: I need x from the backend > questions page
+          /*
+          <br/>
+          <h2>Answer the next x questions based on no media</h2>
+          <br/>
+          <br/>
+          */
+        }
+        </div>
+      )}
 
       <div className="question-container">
         <h2>Question {question.number}</h2>

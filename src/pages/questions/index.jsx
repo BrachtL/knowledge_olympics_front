@@ -31,9 +31,9 @@ export function Questions() {
         setClassroom(data.classroom);
         setNumberId(data.numberId);
         setSchool(data.school);
-        setQuestions(data.questionsArray); //todo: must have number, id, questionText, options
+        setQuestions(data.questionsArray);
         setUserId(data.userId);
-        //todo: I need media: an array with media objects:
+        //media: an array with media objects:
         //type, //text, audio, image, none
         //if type == text -> text, title
         //if type == audio || image -> url
@@ -119,7 +119,6 @@ export function Questions() {
       ...prevOptions,
       [questionId]: option
     }));
-    // TODO: save the selected options in the database
 
     let examOptions = [{
       id: questionId,

@@ -12,9 +12,8 @@ export async function matchCookie(userIdAndType, token) {
         'token': token
       },
       body: JSON.stringify(userIdAndType)
-      //teacher: name, password, type
-      //student: name, birthdate, numberId, classroom, school, type
-      //todo: I need id property on teacher and student
+      //teacher: name, password, type, id
+      //student: name, birthdate, numberId, classroom, school, type, id
     });
 
     if (response.ok) {
@@ -63,17 +62,19 @@ export async function login(userData) {
 
     if (response.ok) {
       const data = await response.json();
-      return data.token; // todo: define this data (necessary data to load the next page)
+      return data.token;
     } else {
-      
-      if (err.response && err.response.data && err.response.data.message) {
-        throw new Error(err.response.data.message);
+      const errorData = await response.json();
+      const errorMessage = errorData.message;
+      if (errorMessage) {
+        throw new Error(errorMessage);
       } else {
         throw new Error('Authentication failed');
       }
     }
   } catch (error) {
     if(error.message){
+      console.log("I was here");
       throw new Error(error.message);
     } else {
       throw new Error('Something went wrong. Please try again.');
@@ -159,7 +160,7 @@ export async function postTeacherQuestionsData(token, questions) {
 
     if (response.ok) {
       const data = await response.json();
-      return data// todo: define this data (necessary data to show if it was successful)
+      return data
     } else {
       throw new Error('Authentication failed');
     }
@@ -183,7 +184,7 @@ export async function postExam(token, examOptions) {
 
     if (response.ok) {
       const data = await response.json();
-      return data// todo: define this data (necessary data to show if it was successful)
+      return data
     } else {
       throw new Error('Authentication failed');
     }
@@ -207,7 +208,7 @@ export async function postFinish(token) {
 
     if (response.ok) {
       const data = await response.json();
-      return data// todo: define this data (necessary data to show if it was successful)
+      return data
     } else {
       throw new Error('Authentication failed');
     }

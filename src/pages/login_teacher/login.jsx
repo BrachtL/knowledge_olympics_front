@@ -39,8 +39,7 @@ const TeacherLogin = () => {
           type: "teacher"
         }
         const token = await login(data);
-        console.log(token); //todo: remove it
-        //todo: I have to save it someway and add to further request's headers
+        //console.log(token);
 
         sessionStorage.setItem('jwt_token', token);
         //setCookie('jwt_token', token, 7); // Store the token for 7 days

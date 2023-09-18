@@ -209,7 +209,7 @@ DONE (sort of):
 	data of another teacher.
 
 	I have to:
-		- check if the question id matches (belogs to) teacher id,
+		- check if the question id matches (belongs to) teacher id,
 		if it is not, ask username and password again, if it maches, update
 		if it does not match, delete cookie and redirect
 		
@@ -245,6 +245,15 @@ Exam guidelines:
 	I have to know what student is (and set the initiated to false)
 	
 	- tell students the test will be automatically finished when the time ends
+	
+	- tell students there are several mechanisms to prevent fraud and it will ID
+	the student who fraud
+	
+
+Verification Day:
+
+	- some places was used Frage, some others Fragen. Which one is right?
+	- ask them to find other minor errors
 
 
 */
@@ -314,8 +323,9 @@ is via "finished" when loading exam page)
 */
 
 /*
-find out why I am having "err is not defined" in teacher and student
-login page when the user does not exist
+	DONE:
+	find out why I am having "err is not defined" in teacher and student
+	login page when the user does not exist
 */
 
 
@@ -326,6 +336,18 @@ ALTER TABLE students
 ADD is_started BOOLEAN DEFAULT FALSE;
 
 
+
+CREATE TABLE codes(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	code VARCHAR(30) NOT NULL,
+	is_enabled BOOLEAN NOT NULL
+);
+
+INSERT INTO codes (code, is_enabled) values ('period1', false);
+INSERT INTO codes (code, is_enabled) values ('period2', false);
+INSERT INTO codes (code, is_enabled) values ('create', false);
+
+
 /*
 
 fields to be created in DB
@@ -334,7 +356,7 @@ fields to be created in DB
 	done: - when true, cannot open the exam anymore
 	done: - is checked when loading the questions page
 		//and when sending anything to save during the exam
-	todo:	and on the setInterval function (matchCookie that will be changed to valdiateStudent)
+	done: - (actually, I did not have to change it) and on the setInterval function (matchCookie that will be changed to valdiateStudent)
 	done: - is set true when clicking on exam page button
 	(I can force finished for all created users on my control, it will prevent
 	the next students to see the previous exams if someone does not manage to send
@@ -352,12 +374,22 @@ fields to be created in DB
 	(on my control panel, I change initiated to false if user needs to login again for
 	some weird reason, but he will have to login on anonymous page probably)
 	
-	TODO: show error messages regarding is finished and is initiated
-	TODO: show modals when they happen
+		DONE: show error messages regarding is finished and is initiated
+	TODO: show modals when finish the exam
 	
-table control / code1_enabled, code2_enabled
-				(when true, can create users)
+		CREATED: table control / code1_enabled, code2_enabled
+				(when true, can login/create users)
 					-> I will have to change the way I block user creation
+	TODO: Create the code field on student frontend
+		DONE: Add code1, code2, and code_master to env vars
+	TODO: Check on backend's login/create student user if the code is == code1 or code2
+	TODO: if code == code1 or code2, check if it is enabled and login/create user
+	TODO: this verification has to be checked on the interval function
+	(if I disable it, the users have to be logged out)
+	
+	code1_2 -> period1_2 (better name)
+	!!!!! To create user: period1 or period2 == TRUE AND create == TRUE
+	!!!!! To login user: period1 or period2 == TRUE
 		
 	What other things I need on my control?
 		initiated, finished
@@ -371,7 +403,30 @@ table control / code1_enabled, code2_enabled
 */
 
 /*
+exam correction SYSTEM
+
+
+
+
+
+questions statistics system 
+
+
+
+
+
+
+students ordinator system
+(tiebreak will be applied considering questions with more wrong answers)
+	DONE: - create tiebreak_score on students table
+
+- get all students from db (id, score, tiebreak_score)
+- order the students by score
+- students with the same score: give tiebreak points based on the answers with less hits
+while there are still students tied on that rank position
+- reorder the tied ones on that position based on the tiebreak points
 
 
 
 */
+

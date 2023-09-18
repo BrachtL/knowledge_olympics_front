@@ -54,7 +54,7 @@ const StudentLogin = () => {
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
         } else {
-          setError('Something went wrong. Please try again.');
+          setError(err.message);
         }
       }
     }

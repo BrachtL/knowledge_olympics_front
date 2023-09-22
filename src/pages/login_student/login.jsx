@@ -12,6 +12,7 @@ const StudentLogin = () => {
   const [classroom, setClassroom] = useState('');
   const [school, setSchool] = useState('');
   const [error, setError] = useState('');
+  const [code, setCode] = useState('');
 
   const navigate = useNavigate();
   const { updateResponse } = useResponse();
@@ -30,7 +31,7 @@ const StudentLogin = () => {
         // Perform validation and login logic here
   
         // Simulate submitting student data
-        const data = { name, birthdate, numberId, classroom, school, type : "student" };
+        const data = { name, birthdate, numberId, classroom, school, type : "student", code };
         const token = await login(data);
   
         // Handle the response from the server
@@ -107,6 +108,14 @@ const StudentLogin = () => {
               placeholder="Escola"
               value={school}
               onChange={(e) => setSchool(e.target.value)}
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="text"
+              placeholder="Identificador"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
             />
           </div>
           <button className="login-student-button" type="submit">Começar</button>

@@ -48,8 +48,8 @@ considerações:
 		- se der problema com o login do usuário e ele tiver que logar de novo
 			-> eu derrubo ele da minha plataforma de controle (usando ID)
 		
-	criar um ambiente de controle para mim
-		função: deslogar usuário, para ele poder relogar
+		//criar um ambiente de controle para mim
+		//função: deslogar usuário, para ele poder relogar
 
 
 	check if all questions have answers when trying to finish the exam
@@ -183,6 +183,7 @@ INSERT INTO questions (subject, id_teacher, question, correct_answer, wrong_answ
 	*/
 	
 /*
+	DONE:
 	deal with image (if needed)
 	
 	- send id property from backend on each question of questions array
@@ -380,16 +381,17 @@ fields to be created in DB
 		CREATED: table control / code1_enabled, code2_enabled
 				(when true, can login/create users)
 					-> I will have to change the way I block user creation
-	TODO: Create the code field on student frontend
+		DONE: Create the code field on student frontend
 		DONE: Add code1, code2, and code_master to env vars
-	TODO: Check on backend's login/create student user if the code is == code1 or code2
-	TODO: if code == code1 or code2, check if it is enabled and login/create user
-	TODO: this verification has to be checked on the interval function
-	(if I disable it, the users have to be logged out)
+		DONE: create "period" field in student table, insert it when creating the user
+		DONE: Check on backend's create student user if the code is == code1 or code2
+		DONE: if code == code1 or code2, check if it is enabled and create user
 	
-	code1_2 -> period1_2 (better name)
-	!!!!! To create user: period1 or period2 == TRUE AND create == TRUE
-	!!!!! To login user: period1 or period2 == TRUE
+	
+
+		DONE: To login user: period1 or period2 == TRUE
+		
+	TODO: Test this whole code/period things again
 		
 	What other things I need on my control?
 		initiated, finished
@@ -402,7 +404,13 @@ fields to be created in DB
 
 */
 
+
 /*
+
+load marked answers when loading questions page
+
+
+
 exam correction SYSTEM
 
 
@@ -426,6 +434,109 @@ students ordinator system
 while there are still students tied on that rank position
 - reorder the tied ones on that position based on the tiebreak points
 
+
+
+*/
+
+/* temp queries:
+
+UPDATE students SET is_started = 0, is_finished = 0;
+
+UPDATE questions SET media_url='https://cdn.glitch.global/afcc3baf-6f75-4045-bcce-9a4bd6cc74e5/thumbnails%2F3b1f8767-6ef2-456c-9729-9fcf1653e6d9.image.png?1695043092731'
+where id = 13;
+
+*/
+
+UPDATE questions SET media_url='https://cdn.glitch.global/afcc3baf-6f75-4045-bcce-9a4bd6cc74e5/gruesse-aus-dem-urlaub.mp3?v=1695297633551'
+where id = 4;
+
+UPDATE questions SET media_url='https://cdn.glitch.global/afcc3baf-6f75-4045-bcce-9a4bd6cc74e5/im-wald.mp3?v=1695297635148'
+where id = 5;
+
+UPDATE questions SET media_url='https://cdn.glitch.global/afcc3baf-6f75-4045-bcce-9a4bd6cc74e5/lange-reise.mp3?v=1695297637773'
+where id = 6;
+
+
+ALTER TABLE students
+ADD period INT;
+
+
+/*
+
+I have to check this to avoid fraud:
+
+	- the codes (period1, period2) are to create user, because if I apply it on login as well,
+	I cant disable it after the students start the exam (create their users)
+	
+	SO -> I have to check if the amount of created users matches the students solving the exam in the
+	classroom. If there are fewer users, someone did not log in. If there are more users, someone is logging
+	from home (or somewhere else out of classroom)
+	* And I can assure it has its own login, because of the is_started that prevents log in from 2 different PCs
+	
+	Conclusion -> I have to check if the amount of created users match exactly the students in the classroom
+	Then, I have to disable the code (period1 or period2)
+
+*/
+
+
+
+/*
+
+Solving glitch bugs:
+
+	run enable-npm
+	
+	backup copy of package.json
+
+
+
+	{
+  "name": "glitch-hello-node",
+  "version": "0.1.0",
+  "description": "A simple Node app built on fastify, instantly up and running. Built to be remixed on Glitch.com.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/static": "^6.10.1",
+    "@fastify/view": "^7.4.1",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "fastify": "^4.17.0",
+    "handlebars": "^4.7.7",
+    "jsonwebtoken": "^9.0.1",
+    "mysql2": "^3.6.1"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/glitch-hello-node"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch"
+  ]
+}
+
+
+*/
+
+
+
+/*
+
+useful commands for the exam Day
+
+log someone out:
+	1 - UPDATE students SET is_finished = 1 where id = XX;
+	2 - change any line on front code forcing everyone to auto reload
+	
+	
 
 
 */

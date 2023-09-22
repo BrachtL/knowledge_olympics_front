@@ -40,8 +40,9 @@ export function Questions() {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
-        //todo: erase cookie and show modal saying something related to isFinished
+        //todo: erase cookie and show modal saying something related to isFinished       
         //redirect when click on ok button
+        deleteCookie("jwt_token");
 
       });
   }, []); // The empty array ensures the effect runs only on mount

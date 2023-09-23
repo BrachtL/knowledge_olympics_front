@@ -407,23 +407,36 @@ fields to be created in DB
 
 /*
 
-load marked answers when loading questions page
+
+    DONE: delete cookie only when it came here because of is_finished = 1
 
 
 
-exam correction SYSTEM
+	DONE: load marked answers when loading questions page
+	todo: commit
+
+
+I need those two on the verification Day
+exam correction SYSTEM and questions statistics system
+make a frontend page with a password field and a button.
+When the button is pressed, the password is sent to backend and compared with a hardcoded password,
+if the code is right (dont need request, because I will use backend env var) a function is exectuded to send
+multiple queries and set each question the user answered right.
+Simultaneously, every right question is counted to statistics, when all users were checked, those counters
+will be saved as questions statistics
+
+
+
+
+I dont need this one yet, since I have all I want on db (check it)
+questions statistics page
+load questions statistics
 
 
 
 
 
-questions statistics system 
-
-
-
-
-
-
+I need this one too on the verification Day
 students ordinator system
 (tiebreak will be applied considering questions with more wrong answers)
 	DONE: - create tiebreak_score on students table
@@ -435,6 +448,10 @@ while there are still students tied on that rank position
 - reorder the tied ones on that position based on the tiebreak points
 
 
+
+I dont need this yet
+make a page to user see his exam without change it
+maybe what I need is just disable onOptionChange or something like that
 
 */
 

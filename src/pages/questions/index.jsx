@@ -16,6 +16,7 @@ export function Questions() {
   const [school, setSchool] = useState('School Name');
   const [questions, setQuestions] = useState([]);
   const [userId, setUserId] = useState(-1);
+  const [previousMarkedOptions, setPreviousMarkedOptions] = useState(-1);
   //const [isFinished, setIsFinished] = useState()
   //const [examOptions, setExamOptions] = useState([]);
   //const { response } = useResponse(); //I think I wont be using it
@@ -33,6 +34,7 @@ export function Questions() {
         setSchool(data.school);
         setQuestions(data.questionsArray);
         setUserId(data.userId);
+        setPreviousMarkedOptions(data.previousMarkedOptions);
         //media: an array with media objects:
         //type, //text, audio, image, none
         //if type == text -> text, title
@@ -42,7 +44,8 @@ export function Questions() {
         console.error('Error fetching data:', error);
         //todo: erase cookie and show modal saying something related to isFinished       
         //redirect when click on ok button
-        deleteCookie("jwt_token");
+        
+        
 
       });
   }, []); // The empty array ensures the effect runs only on mount
@@ -63,6 +66,14 @@ export function Questions() {
       return () => clearInterval(intervalId);
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (previousMarkedOptions != -1) {
+
+      console.log(previousMarkedOptions);
+
+    }
+  }, [previousMarkedOptions]);
 
   async function handleFinish() {
     // Once finished, provide user feedback
@@ -188,7 +199,7 @@ export function Questions() {
           <Question
             key={question.id}//.id
             question={question}
-            selectedOption={selectedOptions[question.id]}//.id
+            selectedOption={selectedOptions[question.id] || previousMarkedOptions[question.id] || ''}
             onOptionChange={(option) => handleOptionChange(question.id, option)}//.id
           />
         ))}

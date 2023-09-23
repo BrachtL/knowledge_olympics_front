@@ -102,6 +102,7 @@ export async function getExamData(token) {
       const errorData = await response.json();
       if (response.status === 401) {
         // Token expired, redirect to login page
+        deleteCookie("jwt_token"); 
         window.location.href = '/';
       } else {
         console.log(errorData);

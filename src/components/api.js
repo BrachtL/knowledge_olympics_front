@@ -1,6 +1,32 @@
 const BASE_URL = 'https://knowledge-olympics-back.glitch.me';
 import { setCookie, getCookie, deleteCookie } from '../cookieHandler';
 
+//todo: make the backend for it
+export async function checkResults(password) {
+  const url = `${BASE_URL}/check-results`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({password: password})
+      //teacher: name, password, type, id
+      //student: name, birthdate, numberId, classroom, school, type, id
+    });
+
+    if (response.ok) {
+      //
+    } else {
+      throw new Error('Check Results Failed');
+    }
+  } catch (error) {
+    throw new Error('Check Results Failed');
+  }
+}
+
 export async function matchCookie(userIdAndType, token) {
   const url = `${BASE_URL}/matchCookie`;
 
@@ -56,6 +82,7 @@ export async function login(userData) {
       body: JSON.stringify(userData), 
       //teacher: name, password, type
       //student: name, birthdate, numberId, classroom, school, type
+      //stats: name, password, type
     });
 
     

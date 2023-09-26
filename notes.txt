@@ -404,6 +404,31 @@ fields to be created in DB
 
 */
 
+CREATE TABLE questions_stats(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	id_questions INT NOT NULL UNIQUE,
+	right_answers INT NOT NULL,
+	FOREIGN KEY (id_questions) REFERENCES questions(id)
+);
+
+INSERT INTO questions_stats (id_questions, right_answers)
+SELECT id, 0
+FROM (SELECT 4 AS id UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8
+      UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+      UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16
+      UNION SELECT 17 UNION SELECT 18 UNION SELECT 19 UNION SELECT 20
+      UNION SELECT 21 UNION SELECT 22 UNION SELECT 23) AS id_range;
+
+
+
+ALTER TABLE student_answers
+ADD is_right BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE student_answers
+MODIFY COLUMN is_right BOOLEAN DEFAULT NULL;
+
+UPDATE student_answers SET is_right = NULL;
+
 
 /*
 
@@ -411,17 +436,25 @@ fields to be created in DB
     DONE: delete cookie only when it came here because of is_finished = 1
 
 
-
 	DONE: load marked answers when loading questions page
-	todo: commit
+	
+	
+TODO: student login field validations
 
+//make this one first than the statistics page (I already have some of it done)
+I need it on the verification Day
+	a resource that triggers the CheckResults (only me allowed)
+	similar to a login page, but there is no cookie/session and there is no redirection
+	put password, click on the button, send the password to API, and receive a console.log message
+	(When the button is pressed, the password is sent to backend and compared with a hardcoded password)
 
-I need those two on the verification Day
-exam correction SYSTEM and questions statistics system
-make a frontend page with a password field and a button.
-When the button is pressed, the password is sent to backend and compared with a hardcoded password,
-if the code is right (dont need request, because I will use backend env var) a function is exectuded to send
-multiple queries and set each question the user answered right.
+I need it on the verification Day
+questions statistics system (todo: create password and confirm password fields for the student's login
+									it will be used to check the results later: here)
+	make a frontend page with a password field and a button. //todo: change this password field to student's name
+	When the button is pressed, the password is sent to backend and compared with a hardcoded password,
+	if the code is right (dont need request, because I will use backend env var) redirect to /stats-data
+then a function is exectuded to send multiple queries and set each question the user answered right.
 Simultaneously, every right question is counted to statistics, when all users were checked, those counters
 will be saved as questions statistics
 
@@ -554,6 +587,18 @@ log someone out:
 	2 - change any line on front code forcing everyone to auto reload
 	
 	
+
+
+*/
+
+
+
+/*
+
+alunos	questões	time(s)
+6		20			21
+7		20			24
+14		20			44
 
 
 */

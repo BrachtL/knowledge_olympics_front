@@ -44,9 +44,7 @@ export function Questions() {
         console.error('Error fetching data:', error);
         //todo: erase cookie and show modal saying something related to isFinished       
         //redirect when click on ok button
-        
-        
-
+      
       });
   }, []); // The empty array ensures the effect runs only on mount
 

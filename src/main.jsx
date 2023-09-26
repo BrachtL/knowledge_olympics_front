@@ -7,6 +7,8 @@ import { Questions } from './pages/questions/index.jsx';
 import TeacherQuestionCreation from './pages/questions_creation/questionCreation';
 import './styles/global.css';
 import { ResponseProvider } from './contexts/responseContext.jsx'
+import StatsLogin from './pages/login_stats/login.jsx';
+import CheckResults from './pages/check_results/check_results.jsx';
 
 function Main() {
   return (
@@ -16,6 +18,9 @@ function Main() {
         <Route path="/questions" element={<Questions />} />
         <Route path="/teacher" element={<TeacherLogin />} />
         <Route path="/teacher-questions" element={<TeacherQuestionCreation />} />
+        <Route path="/stats" element={<StatsLogin />} />
+        <Route path="/stats-data" element={<StatsData />} />
+        <Route path="/check-results" element={<CheckResults />} />
       </Routes>
     </Router>
   );

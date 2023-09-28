@@ -48,6 +48,34 @@ export function Questions() {
       });
   }, []); // The empty array ensures the effect runs only on mount
 
+  //prevent infinite option changing, leading to stress backend cpu
+  useEffect(() => {
+    let isKeyPressed = false
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowUp' ||
+          event.key === 'ArrowDown' ||
+          event.key === 'ArrowLeft' ||
+          event.key === 'ArrowRight'
+        ) {
+        if(isKeyPressed) {
+          event.preventDefault()
+        }
+        isKeyPressed = true;
+      }
+    }
+
+    const handleKeyUp = () => {
+      isKeyPressed = false;
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   useEffect(() => {
     if (userId != -1) {
 

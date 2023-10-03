@@ -9,6 +9,7 @@ import './styles/global.css';
 import { ResponseProvider } from './contexts/responseContext.jsx'
 import StatsLogin from './pages/login_stats/login.jsx';
 import CheckResults from './pages/check_results/check_results.jsx';
+import StatsData from './pages/stats-data/index.jsx';
 
 function Main() {
   return (

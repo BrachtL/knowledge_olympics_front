@@ -31,7 +31,7 @@ const StudentLogin = () => {
         // Perform validation and login logic here
   
         // Simulate submitting student data
-        const data = { name, birthdate, numberId, classroom, school, type : "student", code };
+        const data = { name, birthdate, numberId, classroom, school, type : "student", code, logTo: "exam" };
         const token = await login(data);
   
         // Handle the response from the server

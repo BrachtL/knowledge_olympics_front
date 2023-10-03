@@ -36,7 +36,8 @@ const TeacherLogin = () => {
         const data = {
           name: name,
           password: password,
-          type: "teacher"
+          type: "teacher",
+          logTo: "creation"
         }
         const token = await login(data);
         //console.log(token);

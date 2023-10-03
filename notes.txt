@@ -439,18 +439,31 @@ UPDATE student_answers SET is_right = NULL;
 	DONE: load marked answers when loading questions page
 	
 	
+NEXT STEP: 
+
+make the statistics login page (name, password)
+make the statistics page
+- (if who logs in is not a student, show just the statistics)
+- (if who logs in is a student, show the exam below the statistics page, with disabled radio buttons)
+
+on the backend, check if the password is one of the teacher passwords (hardcode, without query).
+If it is, show just the statistics.
+(to achieve that, use that context thing I did not use yet)
+	
+	
 TODO: student login field validations
 
-//make this one first than the statistics page (I already have some of it done)
-I need it on the verification Day
+	//make this one first than the statistics page (I already have some of it done)
+	I need it on the verification Day
 	a resource that triggers the CheckResults (only me allowed)
 	similar to a login page, but there is no cookie/session and there is no redirection
 	put password, click on the button, send the password to API, and receive a console.log message
 	(When the button is pressed, the password is sent to backend and compared with a hardcoded password)
 
 I need it on the verification Day
-questions statistics system (todo: create password and confirm password fields for the student's login
-									it will be used to check the results later: here)
+questions statistics system 
+(todo: create password and confirm password fields for the student's login
+it will be used to check the results later: here)
 	make a frontend page with a password field and a button. //todo: change this password field to student's name
 	When the button is pressed, the password is sent to backend and compared with a hardcoded password,
 	if the code is right (dont need request, because I will use backend env var) redirect to /stats-data
@@ -468,17 +481,17 @@ load questions statistics
 
 
 
+	ALL DONE:
+		I need this one too on the verification Day
+		students ordinator system
+		(tiebreak will be applied considering questions with more wrong answers)
+		DONE: - create tiebreak_score on students table
 
-I need this one too on the verification Day
-students ordinator system
-(tiebreak will be applied considering questions with more wrong answers)
-	DONE: - create tiebreak_score on students table
-
-- get all students from db (id, score, tiebreak_score)
-- order the students by score
-- students with the same score: give tiebreak points based on the answers with less hits
-while there are still students tied on that rank position
-- reorder the tied ones on that position based on the tiebreak points
+		- get all students from db (id, score, tiebreak_score)
+		- order the students by score
+		- students with the same score: give tiebreak points based on the answers with less hits
+		while there are still students tied on that rank position
+		- reorder the tied ones on that position based on the tiebreak points
 
 
 
@@ -602,3 +615,26 @@ alunos	questões	time(s)
 
 
 */
+
+
+
+/*
+
+PERFORMANCE
+
+- change the multiple queries (loop with queries) by a query with multiple rows,
+using IN and CASE statement, if necessary 
+
+*/
+
+
+/*
+
+write about something I learn and use it in other places of my code: 
+keyword SQL FIELD to order
+
+*/
+
+
+
+

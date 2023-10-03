@@ -1,6 +1,38 @@
 const BASE_URL = 'https://knowledge-olympics-back.glitch.me';
 import { setCookie, getCookie, deleteCookie } from '../cookieHandler';
 
+export async function getStatsData(token) {
+  const url = `${BASE_URL}/stats-data`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      if (response.status === 401) {
+        // Token expired, redirect to login page
+        deleteCookie("jwt_token"); 
+        window.location.href = '/stats';
+      } else {
+        console.log(errorData);
+        throw new Error('Authentication failed');
+      }
+    } 
+  } catch (error) {
+    console.log(error);
+    throw new Error('Something went wrong. Please try again.');
+  }
+}
+
 //todo: make the backend for it
 export async function checkResults(password) {
   const url = `${BASE_URL}/check-results`;

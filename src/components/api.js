@@ -3,6 +3,8 @@ import { setCookie, getCookie, deleteCookie } from '../cookieHandler';
 
 export async function getStatsData(token) {
   const url = `${BASE_URL}/stats-data`;
+  //console.log(token);
+  //console.log("I am here 001");
 
   try {
     const response = await fetch(url, {
@@ -14,9 +16,11 @@ export async function getStatsData(token) {
     });
     
     if (response.ok) {
+      //console.log("I am here 002");
       const data = await response.json();
       return data;
     } else {
+      //console.log("I am here 003");
       const errorData = await response.json();
       if (response.status === 401) {
         // Token expired, redirect to login page
@@ -28,6 +32,7 @@ export async function getStatsData(token) {
       }
     } 
   } catch (error) {
+    //console.log("I am here 004");
     console.log(error);
     throw new Error('Something went wrong. Please try again.');
   }

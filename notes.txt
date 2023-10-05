@@ -430,6 +430,11 @@ MODIFY COLUMN is_right BOOLEAN DEFAULT NULL;
 UPDATE student_answers SET is_right = NULL;
 
 
+ALTER TABLE students
+ADD password char(60) NOT NULL DEFAULT '$2a$10$eRJY0sGpZrhRkHoOuTTavOjoC6uIHS2XlTSjW2vplnLds39x6v8Ca';
+/*test123*/
+
+
 /*
 
 
@@ -441,42 +446,30 @@ UPDATE student_answers SET is_right = NULL;
 	
 NEXT STEP: 
 
-make the statistics login page (name, password)
-make the statistics page
-- (if who logs in is not a student, show just the statistics)
-- (if who logs in is a student, show the exam below the statistics page, with disabled radio buttons)
+	DONE: make the statistics login page (name, password)
 
-on the backend, check if the password is one of the teacher passwords (hardcode, without query).
-If it is, show just the statistics.
-(to achieve that, use that context thing I did not use yet)
+	make the statistics page
+	- (if who logs in is not a student, show the statistics and the questions with the right answers marked
+	with disabled radio buttons)
+	- (if who logs in is a student, show the questions with its options marked, with disabled radio buttons)
 	
 	
 TODO: student login field validations
 
-	//make this one first than the statistics page (I already have some of it done)
-	I need it on the verification Day
+	DONE: (check results)
 	a resource that triggers the CheckResults (only me allowed)
 	similar to a login page, but there is no cookie/session and there is no redirection
 	put password, click on the button, send the password to API, and receive a console.log message
 	(When the button is pressed, the password is sent to backend and compared with a hardcoded password)
 
-I need it on the verification Day
 questions statistics system 
 (todo: create password and confirm password fields for the student's login
 it will be used to check the results later: here)
-	make a frontend page with a password field and a button. //todo: change this password field to student's name
-	When the button is pressed, the password is sent to backend and compared with a hardcoded password,
-	if the code is right (dont need request, because I will use backend env var) redirect to /stats-data
-then a function is exectuded to send multiple queries and set each question the user answered right.
-Simultaneously, every right question is counted to statistics, when all users were checked, those counters
-will be saved as questions statistics
+	make a frontend page with a password field and a button.
 
 
-
-
-I dont need this one yet, since I have all I want on db (check it)
-questions statistics page
-load questions statistics
+	questions statistics page
+	load questions statistics
 
 
 
@@ -493,11 +486,6 @@ load questions statistics
 		while there are still students tied on that rank position
 		- reorder the tied ones on that position based on the tiebreak points
 
-
-
-I dont need this yet
-make a page to user see his exam without change it
-maybe what I need is just disable onOptionChange or something like that
 
 */
 

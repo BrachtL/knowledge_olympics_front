@@ -242,19 +242,55 @@ ADD are_options_created BOOLEAN DEFAULT FALSE;
 
 Exam guidelines:
 
+	-> enable code1/2
+	
+	-> form guidelines:
+	Fill together
+		- Nome completo
+		- Senha serve para ver a prova corrigida posteriormente
+		- data de nascimento
+		- Número da lista do Douglas
+		- turma 30 ou 31
+		- Escola
+		- Identificador
+	
+
 	- the student should remain in the same PC all the exam. If it has to change,
 	I have to know what student is (and set the initiated to false)
-	
-	- tell students the test will be automatically finished when the time ends
 	
 	- tell students there are several mechanisms to prevent fraud and it will ID
 	the student who fraud
 	
+	- media first, questions right below
+	
+	- when clicking on "Entregar" there is no turning back
+	
+	
+	-> disable code1/2 when everyone has been logged in
 
-Verification Day:
 
-	- some places was used Frage, some others Fragen. Which one is right?
-	- ask them to find other minor errors
+*/
+
+/*
+
+useful commands for the exam Day
+
+log someone out:
+	1 - UPDATE students SET is_finished = 1 where id = XX;
+	2 - change any line on front questions/index.jsx forcing everyone to auto reload
+	
+enable code period 1
+	UPDATE codes SET is_enabled = 1 WHERE code = 'period1';
+	
+disable code period 1
+	UPDATE codes SET is_enabled = 0 WHERE code = 'period1';
+	
+	
+enable code period 2
+	UPDATE codes SET is_enabled = 1 WHERE code = 'period2';
+	
+disable code period 2
+	UPDATE codes SET is_enabled = 0 WHERE code = 'period2';
 
 
 */
@@ -391,16 +427,16 @@ fields to be created in DB
 
 		DONE: To login user: period1 or period2 == TRUE
 		
-	TODO: Test this whole code/period things again
+		DONE: Test this whole code/period things again
 		
-	What other things I need on my control?
-		initiated, finished
-		
-	on student login frontend, add field "código"
-	on the creation algorithm, add this:
-		if code == env.code_master -> create user
-		if code == env.code1 -> check if code1_enabled is true -> create user
-		if code == env.code2 -> check if code2_enabled is true -> create user
+		What other things I need on my control?
+			initiated, finished
+			
+		on student login frontend, add field "código"
+		on the creation algorithm, add this:
+			if code == env.code_master -> create user
+			if code == env.code1 -> check if code1_enabled is true -> create user
+			if code == env.code2 -> check if code2_enabled is true -> create user
 
 */
 
@@ -454,7 +490,7 @@ NEXT STEP:
 	- (if who logs in is a student, show the questions with its options marked, with disabled radio buttons)
 	
 	
-TODO: student login field validations
+	DONE: student login field validations
 
 	DONE: (check results)
 	a resource that triggers the CheckResults (only me allowed)
@@ -462,10 +498,10 @@ TODO: student login field validations
 	put password, click on the button, send the password to API, and receive a console.log message
 	(When the button is pressed, the password is sent to backend and compared with a hardcoded password)
 
-questions statistics system 
-(todo: create password and confirm password fields for the student's login
-it will be used to check the results later: here)
-	make a frontend page with a password field and a button.
+	questions statistics system 
+	(done: create password and confirm password fields for the student's login
+	it will be used to check the results later: here)
+		make a frontend page with a password field and a button.
 
 
 	questions statistics page
@@ -581,21 +617,6 @@ Solving glitch bugs:
 
 /*
 
-useful commands for the exam Day
-
-log someone out:
-	1 - UPDATE students SET is_finished = 1 where id = XX;
-	2 - change any line on front code forcing everyone to auto reload
-	
-	
-
-
-*/
-
-
-
-/*
-
 alunos	questões	time(s)
 6		20			21
 7		20			24
@@ -625,4 +646,65 @@ keyword SQL FIELD to order
 
 
 
+/*
 
+TODO:
+- delete all things on students and student_answers
+	done: - variables to check after delete some things on DB:
+		done:questions_stats (todas) -> 20 ids, 0 right_answers em todas
+		done: students -> NOTHING
+		done: student_answers -> nothing
+		
+todo: test 4 simultaneous logins and later 4 simultaneoues send exams 
+
+- solve bug check results: 1 user is always out of the classification (the last one)
+*/
+
+DELETE FROM student_answers;
+DELETE FROM students;
+
+
+
+
+
+
+
+
+
+
+
+
+/*     AFTER EXAM DAY     */
+
+/*
+
+check if correction is right	
+
+	SELECT * FROM student_answers WHERE id_questions = 17 AND is_right = 1;
+	SELECT * FROM student_answers WHERE id_questions = 17 AND is_right = 0 AND answer = 'Er unterrichtet Kinder.';
+
+	student_answers is right (all fields)
+
+
+check if score by student is right
+
+	SELECT SUM(score) AS TotalScore FROM students;
+	sum all student scores (-> 115) and compare to:
+	- student_answers is_right count
+	SELECT * FROM student_answers WHERE is_right = 1; -> 437
+
+	- questions_stats right_answers sum
+	SELECT SUM(right_answers) AS TotalRightAnswers FROM questions_stats; -> 437
+	
+
+*/
+
+/*
+
+FIX:
+	DONE
+
+		- students score is wrong
+		- is tiebreak wrong?
+
+*/

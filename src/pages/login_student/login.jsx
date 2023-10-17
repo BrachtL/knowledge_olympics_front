@@ -13,6 +13,8 @@ const StudentLogin = () => {
   const [school, setSchool] = useState('');
   const [error, setError] = useState('');
   const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const navigate = useNavigate();
   const { updateResponse } = useResponse();
@@ -28,10 +30,48 @@ const StudentLogin = () => {
       //pois já há um usuário conectado. Clique ok para redirecionar."
     } else {
       try {
-        // Perform validation and login logic here
+        setError('');
+
+        if(name.length < 3) {
+          setError('O nome deve conter ao menos 3 caracteres');
+          return;
+        }
+
+        if(password.length  < 3) {
+          setError('A senha deve conter ao menos 3 caracteres');
+          return;
+        }
+        
+        if(password != passwordConfirm) {
+          setError('A senha e a confirmação de senha devem ser iguais');
+          return;
+        }
+
+        if(numberId == '' || numberId <= 0) {
+          setError('Número de ID do aluno digitado é inválido');
+          return;
+        }
+
+        if(classroom == '') {
+          setError('Por favor, digite a turma');
+          return;
+        }
+
+        if(code == '') {
+          setError('Por favor, digite um código identificador');
+          return;
+        }
   
-        // Simulate submitting student data
-        const data = { name, birthdate, numberId, classroom, school, type : "student", code, logTo: "exam" };
+        const data = { name,
+          birthdate,
+          numberId,
+          classroom,
+          school,
+          type: "student",
+          code,
+          logTo: "exam",
+          password
+        };
         const token = await login(data);
   
         // Handle the response from the server
@@ -74,6 +114,22 @@ const StudentLogin = () => {
               placeholder="Nome"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="login-student-input">
+            <input
+              type="password"
+              placeholder="Confirmação de Senha"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
             />
           </div>
           <div className="login-student-input">
